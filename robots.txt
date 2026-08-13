@@ -23,5 +23,5 @@ User-Agent: YisouSpider
 User-Agent: PetalBot
 Allow: /
 
-Host: https://kinegrant.com
-Sitemap: https://kinegrant.com/sitemap.xml
+Host: https://zoahdev.github.io
+Sitemap: https://zoahdev.github.io/sitemap.xml

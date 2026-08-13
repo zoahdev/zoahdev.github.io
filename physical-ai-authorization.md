@@ -12,7 +12,7 @@ KineGrant complements IAM, PKI, API credentials, network controls, ROS 2/SROS2, 
 
 Official status: KGP-001 Experimental Open Draft 0.1. Reference implementation v0.1.1. Apache-2.0.
 
-Primary source: https://kinegrant.com/physical-ai-authorization
+Primary source: https://zoahdev.github.io/physical-ai-authorization
 Specification: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md
 Threat model: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md
-Executable evidence: https://kinegrant.com/challenge
+Executable evidence: https://zoahdev.github.io/challenge

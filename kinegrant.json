@@ -1,13 +1,13 @@
 {
   "$schema": "https://schema.org",
   "@type": "Project",
-  "@id": "https://kinegrant.com/#project",
+  "@id": "https://zoahdev.github.io/#project",
   "name": "KineGrant",
   "alternateName": [
     "KineGrant Protocol",
     "KGP-001"
   ],
-  "url": "https://kinegrant.com/",
+  "url": "https://zoahdev.github.io/",
   "founder": "Zoah",
   "description": {
     "en": "An experimental open authorization and accountability protocol for Physical AI systems.",
@@ -49,9 +49,9 @@
     "specification": "https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md",
     "sourceCode": "https://github.com/zoahdev/kinegrant-protocol",
     "threatModel": "https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md",
-    "machinePermissionTest": "https://kinegrant.com/challenge",
-    "verifier": "https://kinegrant.com/verify",
-    "englishExplanation": "https://kinegrant.com/physical-ai-authorization",
-    "chineseExplanation": "https://kinegrant.com/zh/physical-ai-authorization"
+    "machinePermissionTest": "https://zoahdev.github.io/challenge",
+    "verifier": "https://zoahdev.github.io/verify",
+    "englishExplanation": "https://zoahdev.github.io/physical-ai-authorization",
+    "chineseExplanation": "https://zoahdev.github.io/zh/physical-ai-authorization"
   }
 }

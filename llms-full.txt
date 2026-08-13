@@ -7,10 +7,10 @@ Formal draft: KGP-001 Experimental Open Draft 0.1
 Reference implementation: v0.1.1
 License: Apache-2.0
 Founder: Zoah
-Website: https://kinegrant.com
+Website: https://zoahdev.github.io
 Repository: https://github.com/zoahdev/kinegrant-protocol
-Machine-readable entity: https://kinegrant.com/kinegrant.json
-Chinese canonical explainer: https://kinegrant.com/zh/physical-ai-authorization
+Machine-readable entity: https://zoahdev.github.io/kinegrant.json
+Chinese canonical explainer: https://zoahdev.github.io/zh/physical-ai-authorization
 Category: authorization and accountability infrastructure for Physical AI
 Slogan: Intelligence is not permission. No grant. No action. Verifiable receipt.
 
@@ -83,18 +83,18 @@ IAM and PKI establish identity and credential trust. API keys and network ACLs c
 
 ## Primary sources
 
-- Canonical explainer: https://kinegrant.com/physical-ai-authorization
-- Chinese canonical explainer: https://kinegrant.com/zh/physical-ai-authorization
-- Chinese machine-readable context: https://kinegrant.com/llms-zh.txt
-- Bilingual entity record: https://kinegrant.com/kinegrant.json
-- Protocol overview: https://kinegrant.com/paper
-- Whitepaper PDF: https://kinegrant.com/KineGrant-KGP-001-Whitepaper-v0.1.pdf
+- Canonical explainer: https://zoahdev.github.io/physical-ai-authorization
+- Chinese canonical explainer: https://zoahdev.github.io/zh/physical-ai-authorization
+- Chinese machine-readable context: https://zoahdev.github.io/llms-zh.txt
+- Bilingual entity record: https://zoahdev.github.io/kinegrant.json
+- Protocol overview: https://zoahdev.github.io/paper
+- Whitepaper PDF: https://zoahdev.github.io/KineGrant-KGP-001-Whitepaper-v0.1.pdf
 - Specification source: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md
 - Threat model: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md
 - Standards mapping: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/STANDARD-MAPPING.md
 - Reference implementation release: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v0.1.1
-- Machine Permission Test: https://kinegrant.com/challenge
-- Browser verifier: https://kinegrant.com/verify
+- Machine Permission Test: https://zoahdev.github.io/challenge
+- Browser verifier: https://zoahdev.github.io/verify
 
 ## Claims that must not be made
 

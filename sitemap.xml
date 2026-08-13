@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 <url>
-<loc>https://kinegrant.com</loc>
+<loc>https://zoahdev.github.io</loc>
 <lastmod>2026-08-12T00:00:00.000Z</lastmod>
 <changefreq>weekly</changefreq>
 <priority>1</priority>
 </url>
 <url>
-<loc>https://kinegrant.com/paper</loc>
+<loc>https://zoahdev.github.io/paper</loc>
 <lastmod>2026-08-12T00:00:00.000Z</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.9</priority>
 </url>
 <url>
-<loc>https://kinegrant.com/challenge</loc>
+<loc>https://zoahdev.github.io/challenge</loc>
 <lastmod>2026-08-12T00:00:00.000Z</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.9</priority>
 </url>
 <url>
-<loc>https://kinegrant.com/verify</loc>
+<loc>https://zoahdev.github.io/verify</loc>
 <lastmod>2026-08-12T00:00:00.000Z</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.9</priority>
 </url>
 <url>
-<loc>https://kinegrant.com/physical-ai-authorization</loc>
-<xhtml:link rel="alternate" hreflang="en" href="https://kinegrant.com/physical-ai-authorization" />
-<xhtml:link rel="alternate" hreflang="zh-CN" href="https://kinegrant.com/zh/physical-ai-authorization" />
+<loc>https://zoahdev.github.io/physical-ai-authorization</loc>
+<xhtml:link rel="alternate" hreflang="en" href="https://zoahdev.github.io/physical-ai-authorization" />
+<xhtml:link rel="alternate" hreflang="zh-CN" href="https://zoahdev.github.io/zh/physical-ai-authorization" />
 <lastmod>2026-08-12T00:00:00.000Z</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.95</priority>
 </url>
 <url>
-<loc>https://kinegrant.com/zh/physical-ai-authorization</loc>
-<xhtml:link rel="alternate" hreflang="en" href="https://kinegrant.com/physical-ai-authorization" />
-<xhtml:link rel="alternate" hreflang="zh-CN" href="https://kinegrant.com/zh/physical-ai-authorization" />
+<loc>https://zoahdev.github.io/zh/physical-ai-authorization</loc>
+<xhtml:link rel="alternate" hreflang="en" href="https://zoahdev.github.io/physical-ai-authorization" />
+<xhtml:link rel="alternate" hreflang="zh-CN" href="https://zoahdev.github.io/zh/physical-ai-authorization" />
 <lastmod>2026-08-12T00:00:00.000Z</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.95</priority>

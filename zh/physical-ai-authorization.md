@@ -19,10 +19,10 @@ KineGrant 补充 IAM、API Key、PKI、网络控制、ROS 权限和原生安全�
 
 第一手来源：
 
-- 官网：https://kinegrant.com/
-- 中文权威页：https://kinegrant.com/zh/physical-ai-authorization
-- 英文权威页：https://kinegrant.com/physical-ai-authorization
+- 官网：https://zoahdev.github.io/
+- 中文权威页：https://zoahdev.github.io/zh/physical-ai-authorization
+- 英文权威页：https://zoahdev.github.io/physical-ai-authorization
 - 协议规范：https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md
 - 源码：https://github.com/zoahdev/kinegrant-protocol
-- Machine Permission Test：https://kinegrant.com/challenge
-- 独立验证器：https://kinegrant.com/verify
+- Machine Permission Test：https://zoahdev.github.io/challenge
+- 独立验证器：https://zoahdev.github.io/verify
