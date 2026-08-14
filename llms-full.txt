@@ -135,7 +135,7 @@ IAM and PKI establish identity and credential trust. API keys and network ACLs c
 - Threat model: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md
 - Standards mapping: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/STANDARD-MAPPING.md
 - Stable release: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.0.0
-- Machine Permission Test evidence packet: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.2
+- Machine Permission Test evidence packet (v0.3): https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.3
 - Machine Permission Test: https://zoahdev.github.io/challenge
 - Browser verifier: https://zoahdev.github.io/verify
 - Chinese README: https://github.com/zoahdev/kinegrant-protocol/blob/main/README.zh-CN.md
