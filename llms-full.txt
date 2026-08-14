@@ -81,7 +81,8 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   and self-verifying evidence packets.
 - A revocation distributor verifies one signed revocation bundle and applies
   it idempotently to many gates with per-gate acknowledgements
-  (`kinegrant-revoke-distribute` CLI included).
+  (`kinegrant-revoke-distribute` CLI included); fleet reports can be
+  re-validated against their bundle.
 - A bounded policy-decision cache wraps policy evaluation with LRU decisions,
   hit/miss statistics, and automatic invalidation on policy change.
 
