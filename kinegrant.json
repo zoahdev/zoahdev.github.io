@@ -28,7 +28,7 @@
   "status": {
     "protocol": "KGP-001",
     "referenceImplementation": "v1.0.0",
-    "stableRelease": "v1.1.0",
+    "stableRelease": "v1.2.0",
     "license": "Apache-2.0"
   },
   "properties": [
@@ -50,7 +50,7 @@
     "specification": "https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md",
     "sourceCode": "https://github.com/zoahdev/kinegrant-protocol",
     "threatModel": "https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md",
-    "stableRelease": "https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.1.0",
+    "stableRelease": "https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.2.0",
     "machinePermissionTest": "https://kinegrant.com/challenge",
     "verifier": "https://kinegrant.com/verify",
     "englishExplanation": "https://kinegrant.com/physical-ai-authorization",
