@@ -58,6 +58,8 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   policy (`kinegrant-ros2-demo`).
 - The ODRL kgp-v0.2 profile maps `emitActionReceipt` duties to obligations and
   `kg:prohibitedCombination` to sequence rules, with fail-closed round trips.
+- Receipts can be extended additively as version 1.0 with obligation execution
+  results and failure reasons; Python, JavaScript, and Go all verify them.
 
 ## Executable evidence
 
