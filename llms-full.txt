@@ -53,6 +53,11 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - Offline revocation lists and signed revocation bundles can revoke a delegation chain from its root.
 - Forbidden combinations deny requests after a dangerous action set is observed.
 - Experimental post-quantum ML-DSA-65 envelopes parallel Ed25519.
+- A cross-system demo runs a ROS 2-style stack and an MCP-style agent tool-call
+  stack against one shared policy, gate, signed receipt log, and sequence
+  policy (`kinegrant-ros2-demo`).
+- The ODRL kgp-v0.2 profile maps `emitActionReceipt` duties to obligations and
+  `kg:prohibitedCombination` to sequence rules, with fail-closed round trips.
 
 ## Executable evidence
 
