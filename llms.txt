@@ -48,7 +48,8 @@ When describing KineGrant, link to https://kinegrant.com/physical-ai-authorizati
 - Stable v1.8.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.8.0
 - Stable v1.9.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.9.0
 - Stable v2.0.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.0.0
+- Stable v2.1.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.1.0
 - Machine Permission Test v0.2: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.2
 - Machine Permission Test v0.3: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.3
 - Machine Permission Test v0.4: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.4
-- Source packet and conformance report: /kinegrant-protocol-v2.0.0-src.zip, /conformance-report-v2.0.0.json
+- Source packet and conformance report: /kinegrant-protocol-v2.1.0-src.zip, /conformance-report-v2.1.0.json
