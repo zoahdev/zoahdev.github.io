@@ -1,0 +1,340 @@
+{
+  "cases": [
+    {
+      "evidence": {
+        "actuator_calls": 0,
+        "rejection": "ValueError: unsupported signature algorithm"
+      },
+      "expected": "DENY with zero actuator calls",
+      "id": "MPT-001",
+      "name": "No capability means no action",
+      "observed": "DENY with 0 actuator calls",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 1,
+        "capability_id": "kinegrant:cap:d219907c1b67178cc7da5016fc873b93bb1a48cf4cdf47735328218a43e03750"
+      },
+      "expected": "ALLOW with one actuator call",
+      "id": "MPT-002",
+      "name": "Valid capability executes exactly once",
+      "observed": "ALLOW with 1 actuator call",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 1,
+        "second_attempt": "PermissionError: capability replay detected"
+      },
+      "expected": "First ALLOW, second DENY, one actuator call total",
+      "id": "MPT-003",
+      "name": "Consumed capability cannot be replayed",
+      "observed": "First ALLOW, second DENY, 1 actuator call total",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 0,
+        "attempts": {
+          "action": {
+            "reason": "PermissionError: capability does not authorize this request",
+            "rejected": true
+          },
+          "agent": {
+            "reason": "PermissionError: capability does not authorize this request",
+            "rejected": true
+          },
+          "purpose": {
+            "reason": "PermissionError: capability does not authorize this request",
+            "rejected": true
+          },
+          "target": {
+            "reason": "PermissionError: capability does not authorize this request",
+            "rejected": true
+          }
+        }
+      },
+      "expected": "DENY modified agent, target, action, and purpose",
+      "id": "MPT-004",
+      "name": "Capability binding rejects modified request fields",
+      "observed": "DENY 4 of 4 modified requests",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 0,
+        "rejection": "PermissionError: untrusted capability issuer"
+      },
+      "expected": "DENY with zero actuator calls",
+      "id": "MPT-005",
+      "name": "Untrusted capability issuer is rejected",
+      "observed": "DENY with zero actuator calls",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 0,
+        "rejection": "PermissionError: capability has expired",
+        "verification_time": "2026-08-14T22:17:54.244778Z"
+      },
+      "expected": "DENY at expires_at with zero actuator calls",
+      "id": "MPT-006",
+      "name": "Expired capability is rejected",
+      "observed": "DENY at expires_at",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 1,
+        "allowed": 1,
+        "attempts": 64,
+        "denied": 63
+      },
+      "expected": "Exactly one ALLOW across 64 concurrent attempts",
+      "id": "MPT-007",
+      "name": "Concurrent consumption has one winner",
+      "observed": "1 ALLOW and 63 DENY",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 1,
+        "persistent_store": "SQLiteReplayStore",
+        "restart_rejection": "PermissionError: capability replay detected"
+      },
+      "expected": "First process ALLOW, restarted gate DENY",
+      "id": "MPT-008",
+      "name": "Replay remains rejected after gate restart",
+      "observed": "First gate ALLOW, restarted gate DENY",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "receipt_id": "kinegrant:receipt:88ccfb8de073494d5e2a79ead612f5e0dd7a9da4524aad9cabead27a4a9db119",
+        "tamper_rejected": true,
+        "trusted_valid": true,
+        "untrusted_executor_rejected": true
+      },
+      "expected": "Trusted receipt valid; tampered and untrusted receipts invalid",
+      "id": "MPT-009",
+      "name": "Receipt trust and integrity are enforced",
+      "observed": "trusted=VALID, tampered=REJECTED, untrusted=REJECTED",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 1,
+        "missing_decision": "explicit_deny",
+        "over_decision": "explicit_deny",
+        "within_decision": "explicit_allow"
+      },
+      "expected": "Within limit ALLOW; over limit and missing evidence DENY",
+      "id": "MPT-010",
+      "name": "Physical constraints fail closed",
+      "observed": "within=explicit_allow, over=explicit_deny, missing=explicit_deny, actuator_calls=1",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 1,
+        "attenuation_valid": true,
+        "child_accepted": true,
+        "parent_error": "PermissionError: capability is not a valid attenuation of its parent",
+        "parent_rejected": true,
+        "replay_error": "PermissionError: capability replay detected",
+        "replay_rejected": true,
+        "widen_error": "ValueError: invalid signature",
+        "widen_rejected": true
+      },
+      "expected": "Child ALLOW once; replay, widening, and wrong parent DENY",
+      "id": "MPT-011",
+      "name": "Scoped attenuation narrows and is parent-verified",
+      "observed": "child=ALLOW, replay=DENY, widen=DENY, wrong_parent=DENY, actuator_calls=1",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actuator_calls": 1,
+        "delegate_allowed": true,
+        "principal_error": "PermissionError: capability does not authorize this request",
+        "principal_rejected": true
+      },
+      "expected": "Delegate ALLOW once; principal agent DENY",
+      "id": "MPT-012",
+      "name": "Cross-agent delegation binds the delegate request",
+      "observed": "delegate=ALLOW, principal=DENY, actuator_calls=1",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "capability_tier": 2,
+        "decision_tier": 2,
+        "receipt_chain_valid": true,
+        "receipt_tier": 2
+      },
+      "expected": "Decision, capability, and receipt all carry tier 2",
+      "id": "MPT-013",
+      "name": "Approval tiers propagate from policy to receipt",
+      "observed": "decision_tier=2, capability_tier=2, receipt_tier=2, chain=VALID",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "touch_verdict": {
+          "allowed": true,
+          "matched_combination_ids": [],
+          "reason": "sequence_allowed"
+        },
+        "train_verdict": {
+          "allowed": false,
+          "matched_combination_ids": [
+            "mpt-record-open-train"
+          ],
+          "reason": "forbidden_combination"
+        }
+      },
+      "expected": "train_on_data DENY after record+open; unrelated action ALLOW",
+      "id": "MPT-014",
+      "name": "Forbidden combinations deny matching requests",
+      "observed": "train=forbidden_combination, touch=sequence_allowed, matched=['mpt-record-open-train']",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "chain_valid": true,
+        "obligation_status": "satisfied",
+        "receipt_version": "1.0"
+      },
+      "expected": "RECEIPT 1.0 with satisfied obligation and valid chain",
+      "id": "MPT-015",
+      "name": "Receipt 1.0 records obligation satisfaction",
+      "observed": "version=1.0, status=satisfied, chain_valid=True",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "compliant": false,
+        "reason": "audit-log commitment missing from receipt",
+        "receipt_version": "0.1"
+      },
+      "expected": "NON-COMPLIANT with audit-log commitment missing",
+      "id": "MPT-016",
+      "name": "Obligation compliance detects suppressed commitment",
+      "observed": "NON-COMPLIANT (audit-log commitment missing from receipt)",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "added_total": 2,
+        "bundle_id": "kinegrant:revocation-bundle:9e4f09510a6abc2cf11542e265722485fb88d3147af792a762a6f446e6418cbd",
+        "gate_a_revoked": true,
+        "gate_b_revoked": true
+      },
+      "expected": "PASS fleet report with both gates revoked",
+      "id": "MPT-017",
+      "name": "Fleet revocation distribution applies to all gates",
+      "observed": "PASS added=2",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "bundle_version": 1,
+        "independent_verifiers": {
+          "kinegrant-go": "SKIP",
+          "kinegrant-js": "PASS"
+        },
+        "matched_policy_ids": [
+          "urn:kinegrant:mpt:policy:bundle-018"
+        ],
+        "policy_id": "urn:kinegrant:mpt:policy:bundle-018"
+      },
+      "expected": "ALLOW with the signed policy id matched",
+      "id": "MPT-018",
+      "name": "Signed policy bundle is accepted and enforced",
+      "observed": "ALLOW matched=['urn:kinegrant:mpt:policy:bundle-018']",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "independent_verifiers": {
+          "kinegrant-go": "SKIP",
+          "kinegrant-js": "PASS"
+        },
+        "tamper_rejected": true,
+        "wrong_authority_rejected": true,
+        "wrong_policy_rejected": true
+      },
+      "expected": "ALL rejected (fail-closed)",
+      "id": "MPT-019",
+      "name": "Policy bundle tampering, wrong authority, and wrong policy are rejected",
+      "observed": "tamper=True authority=True policy=True",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "current_v2": true,
+        "fail_closed_none": true,
+        "independent_verifiers": {
+          "kinegrant-go": "SKIP",
+          "kinegrant-js": "PASS"
+        },
+        "rolled_back_to_v1": true
+      },
+      "expected": "v2 current, then v1 after revocation, then None",
+      "id": "MPT-020",
+      "name": "Policy version rollback and fail-closed with no current version",
+      "observed": "v2=True rolled_back=True fail_closed=True",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "downgrade_noop": 1,
+        "gate_a_version": 2,
+        "gate_b_version": 2,
+        "initial_applied": 2,
+        "upgrade_applied": 2
+      },
+      "expected": "PASS fleet report, both gates upgraded, no downgrade applied",
+      "id": "MPT-021",
+      "name": "Fleet policy distribution upgrades without downgrades",
+      "observed": "initial=2 upgrade=2 noop=1",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "clean_analysis": "PASS",
+        "conflict_analysis": "FAIL",
+        "conflicting_effect_found": true,
+        "coverage": "PASS"
+      },
+      "expected": "PASS analysis for clean bundle, FAIL with conflict for overlapping rules, PASS coverage",
+      "id": "MPT-022",
+      "name": "Policy bundle analysis detects conflicts and coverage passes",
+      "observed": "clean=PASS conflict=FAIL coverage=PASS",
+      "passed": true
+    }
+  ],
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_implementation": "CPython",
+    "python_version": "3.12.13"
+  },
+  "generated_at": "2026-08-14T22:17:45.056325Z",
+  "limitations": [
+    "This software test does not prove physical-world actuation or functional safety.",
+    "Receipts prove signed executor attestations, not independent physical truth."
+  ],
+  "overall_result": "PASS",
+  "protocol": "KGP-001 Experimental Open Draft 0.1",
+  "reference_implementation": "2.9.0",
+  "run_id": "urn:kinegrant:mpt:run:8304678c-ac0b-4f16-9361-35db9801a26f",
+  "runner_digest": "sha256:80b87ff600934fa993b4a089d15f00ebc875d0ea14aa0b6fa6087f53012476b5",
+  "schema_version": "0.5",
+  "source_commit": "304fe33a4050af22dd20a2597afc368f6f57946e",
+  "summary": {
+    "failed": 0,
+    "passed": 22,
+    "total": 22
+  }
+}

@@ -1,0 +1,2 @@
+3757ecc35161c9751bbd3cdb039c8e0a40eb1be39d7d52eeca97bc6f96d2695e  KineGrant-Machine-Permission-Test-v0.5.zip
+a232151b6ab4caadf84ceabac7dd924144a52033ed40dbaf27c312e664a50811  machine-permission-test.evidence.json
