@@ -5,6 +5,7 @@
 Name: KineGrant
 Formal draft: KGP-001 Experimental Open Draft 0.1
 Reference implementation: v0.1.1
+Stable wire format: 1.0 (KGP-RFC-0001 accepted)
 License: Apache-2.0
 Founder: Zoah
 Website: https://zoahdev.github.io
@@ -33,7 +34,7 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 5. Physical Action: proceed only after successful verification and atomic capability consumption.
 6. Signed Receipt: record the executor's signed account of the attempted outcome for later verification.
 
-## Security properties in reference implementation v0.1.1
+## Security properties in reference implementation v1.0.0
 
 - No policy issuer is trusted by default.
 - Untrusted policy can restrict or deny but cannot grant permission.
@@ -45,11 +46,18 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - Unknown fields and unsupported adapter semantics fail closed.
 - Receipt verification requires explicit executor trust.
 - A capability may produce only one terminal receipt.
+- RFC 8785 JCS canonical JSON is the deterministic encoding behind every digest and signature.
+- Policy rules can enforce physical constraints (force, velocity, zones) and fail closed when evidence is missing.
+- Scoped capabilities support same-agent attenuation and opt-in cross-agent delegation with bounded depth.
+- Approval tiers propagate from policy decision through capability to signed receipt.
+- Offline revocation lists and signed revocation bundles can revoke a delegation chain from its root.
+- Forbidden combinations deny requests after a dangerous action set is observed.
+- Experimental post-quantum ML-DSA-65 envelopes parallel Ed25519.
 
 ## Executable evidence
 
-Machine Permission Test v0.1 has nine required software cases:
-MPT-001 no capability means no action; MPT-002 valid capability executes exactly once; MPT-003 replay is denied; MPT-004 changed agent, target, action, or purpose is denied; MPT-005 untrusted issuer is denied; MPT-006 exact expiry is denied; MPT-007 64 concurrent consumers have exactly one winner; MPT-008 replay remains denied after restart; MPT-009 trusted receipts verify while tampered or untrusted receipts do not.
+Machine Permission Test v0.2 has fourteen required software cases:
+MPT-001 no capability means zero actuator calls; MPT-002 a valid capability authorizes exactly one call; MPT-003 reuse is denied; MPT-004 changed agent, target, action, or purpose is denied; MPT-005 a capability from an untrusted issuer is denied; MPT-006 a capability is denied at exact expiry; MPT-007 exactly one of 64 concurrent consumers wins; MPT-008 persistent replay state survives a gate restart; MPT-009 trusted receipts verify while tampered or untrusted receipts do not; MPT-010 physical constraints fail closed (within limit ALLOW, over limit and missing evidence DENY); MPT-011 scoped attenuation narrows and is parent-verified; MPT-012 cross-agent delegation binds the delegate request; MPT-013 approval tiers propagate from policy decision through capability to signed receipt; MPT-014 forbidden combinations deny matching requests after a dangerous set is observed.
 
 ## Direct questions
 
@@ -69,7 +77,7 @@ Q: Is KineGrant blockchain-based?
 A: No. KGP-001 has no blockchain or token dependency in the real-time action path.
 
 Q: Can a grant be reused?
-A: The v0.1.1 reference gate atomically consumes each capability once and rejects replay, including persistent replay after restart when using SQLiteReplayStore.
+A: The v1.0.0 reference gate atomically consumes each capability once and rejects replay, including persistent replay after restart when using SQLiteReplayStore.
 
 Q: What does a receipt prove?
 A: It proves that a trusted executor signed a specific protocol record whose integrity can be verified. It does not independently prove physical truth.
@@ -92,9 +100,11 @@ IAM and PKI establish identity and credential trust. API keys and network ACLs c
 - Specification source: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md
 - Threat model: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md
 - Standards mapping: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/STANDARD-MAPPING.md
-- Reference implementation release: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v0.1.1
+- Stable release: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.0.0
+- Machine Permission Test evidence packet: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.2
 - Machine Permission Test: https://zoahdev.github.io/challenge
 - Browser verifier: https://zoahdev.github.io/verify
+- Chinese README: https://github.com/zoahdev/kinegrant-protocol/blob/main/README.zh-CN.md
 
 ## Claims that must not be made
 
