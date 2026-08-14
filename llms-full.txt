@@ -92,6 +92,8 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - A bounded model check verifies the Gatekeeper boundary composition
   invariants (actuator after the boundary, receipts after gate consumption,
   journal only on compliant success, no replay double-execution).
+- A security review kit generator runs the conformance, MPT, red-team,
+  benchmark, and unit-test suites and emits an auditor-ready checklist.
 
 ## Executable evidence
 
