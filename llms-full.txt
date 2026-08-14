@@ -60,6 +60,9 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   `kg:prohibitedCombination` to sequence rules, with fail-closed round trips.
 - Receipts can be extended additively as version 1.0 with obligation execution
   results and failure reasons; Python, JavaScript, and Go all verify them.
+- After execution, ObligationCompliance verifies that every capability
+  obligation (e.g. emitActionReceipt) has a verifiable fulfillment, and the
+  red-team suite includes a suppressed-receipt probe.
 
 ## Executable evidence
 
