@@ -1,0 +1,118 @@
+{
+  "limitations": [
+    "Reference-implementation self-assessment; certification of third-party implementations awaits RFC approval."
+  ],
+  "marks": [
+    {
+      "detail": "default_deny",
+      "level": "L1",
+      "name": "default_deny",
+      "passed": true
+    },
+    {
+      "detail": "explicit_deny",
+      "level": "L1",
+      "name": "deny_overrides",
+      "passed": true
+    },
+    {
+      "detail": "consumed once",
+      "level": "L1",
+      "name": "single_use",
+      "passed": true
+    },
+    {
+      "detail": "second use denied",
+      "level": "L1",
+      "name": "replay_rejected",
+      "passed": true
+    },
+    {
+      "detail": "receipt verified",
+      "level": "L1",
+      "name": "receipt_chain",
+      "passed": true
+    },
+    {
+      "detail": "parent verified",
+      "level": "L2",
+      "name": "attenuation",
+      "passed": true
+    },
+    {
+      "detail": "within=explicit_allow, over=default_deny",
+      "level": "L2",
+      "name": "physical_constraints",
+      "passed": true
+    },
+    {
+      "detail": "tier=2",
+      "level": "L2",
+      "name": "approval_tiers",
+      "passed": true
+    },
+    {
+      "detail": "forbidden_combination",
+      "level": "L2",
+      "name": "forbidden_combination",
+      "passed": true
+    },
+    {
+      "detail": "delegate bound",
+      "level": "L3",
+      "name": "delegation",
+      "passed": true
+    },
+    {
+      "detail": "outsider denied",
+      "level": "L3",
+      "name": "delegate_allowlist",
+      "passed": true
+    },
+    {
+      "detail": "root revoked child",
+      "level": "L3",
+      "name": "revocation",
+      "passed": true
+    },
+    {
+      "detail": "backwards rejected",
+      "level": "L4",
+      "name": "trusted_clock",
+      "passed": true
+    },
+    {
+      "detail": "commitment verified",
+      "level": "L4",
+      "name": "sensor_evidence",
+      "passed": true
+    },
+    {
+      "detail": "notarized",
+      "level": "L4",
+      "name": "receipt_checkpoint",
+      "passed": true
+    },
+    {
+      "detail": "attestation verified",
+      "level": "L4",
+      "name": "device_attestation",
+      "passed": true
+    },
+    {
+      "detail": "ML-DSA-65 verified",
+      "level": "L4",
+      "name": "post_quantum_envelopes",
+      "passed": true
+    }
+  ],
+  "overall_result": "PASS",
+  "schema_version": "0.1",
+  "source_commit": "39ae5e622804a996b6def1e4d33caf7cd20f42f7",
+  "summary": {
+    "failed": 0,
+    "passed": 17,
+    "total": 17
+  },
+  "type": "kinegrant:ConformanceReport"
+}

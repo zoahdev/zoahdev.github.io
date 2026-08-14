@@ -1,17 +1,17 @@
 {
   "$schema": "https://schema.org",
   "@type": "Project",
-  "@id": "https://zoahdev.github.io/#project",
+  "@id": "https://kinegrant.com/#project",
   "name": "KineGrant",
   "alternateName": [
     "KineGrant Protocol",
     "KGP-001"
   ],
-  "url": "https://zoahdev.github.io/",
+  "url": "https://kinegrant.com/",
   "founder": "Zoah",
   "description": {
-    "en": "An experimental open authorization and accountability protocol for Physical AI systems.",
-    "zh-CN": "面向物理 AI 系统的实验性开放授权与问责协议。"
+    "en": "An open authorization and accountability protocol for Physical AI systems.",
+    "zh-CN": "面向物理 AI 系统的开放授权与问责协议。"
   },
   "canonicalDefinition": {
     "en": "Physical AI authorization decides and proves whether a specific agent may cause a specific machine to perform a specific real-world action, for a defined purpose and limited time.",
@@ -26,8 +26,9 @@
     "Signed Receipt"
   ],
   "status": {
-    "protocol": "KGP-001 Experimental Open Draft 0.1",
-    "referenceImplementation": "v0.1.1",
+    "protocol": "KGP-001",
+    "referenceImplementation": "v1.0.0",
+    "stableRelease": "v1.0.0",
     "license": "Apache-2.0"
   },
   "properties": [
@@ -43,15 +44,16 @@
     "not a motion planner",
     "not a functional-safety controller",
     "not a legal authority",
-    "not a recognized standard"
+    "not yet a formally recognized standards-body standard"
   ],
   "primarySources": {
     "specification": "https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md",
     "sourceCode": "https://github.com/zoahdev/kinegrant-protocol",
     "threatModel": "https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md",
-    "machinePermissionTest": "https://zoahdev.github.io/challenge",
-    "verifier": "https://zoahdev.github.io/verify",
-    "englishExplanation": "https://zoahdev.github.io/physical-ai-authorization",
-    "chineseExplanation": "https://zoahdev.github.io/zh/physical-ai-authorization"
+    "stableRelease": "https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.0.0",
+    "machinePermissionTest": "https://kinegrant.com/challenge",
+    "verifier": "https://kinegrant.com/verify",
+    "englishExplanation": "https://kinegrant.com/physical-ai-authorization",
+    "chineseExplanation": "https://kinegrant.com/zh/physical-ai-authorization"
   }
 }
