@@ -93,7 +93,8 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   invariants (actuator after the boundary, receipts after gate consumption,
   journal only on compliant success, no replay double-execution).
 - A security review kit generator runs the conformance, MPT, red-team,
-  benchmark, and unit-test suites and emits an auditor-ready checklist.
+  benchmark, and unit-test suites and emits an auditor-ready checklist; a
+  checksummed kit packet is published with each stable release.
 
 ## Executable evidence
 
