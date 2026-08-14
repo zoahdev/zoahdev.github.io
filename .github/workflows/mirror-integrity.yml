@@ -1,0 +1,32 @@
+name: Mirror Integrity
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify public routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://zoahdev.github.io"
+          for path in "/" "/paper/" "/challenge/" "/verify/" "/physical-ai-authorization/" "/zh/physical-ai-authorization/" "/robots.txt" "/sitemap.xml" "/llms.txt" "/llms-full.txt" "/llms-zh.txt" "/kinegrant.json"; do
+            curl --fail --silent --show-error --location --retry 3 --max-time 30 "${base}${path}" >/dev/null
+          done
+      - name: Verify release artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://zoahdev.github.io"
+          curl --fail --silent --show-error --location --retry 3 --remote-name "${base}/SHA256SUMS.txt"
+          curl --fail --silent --show-error --location --retry 3 --remote-name "${base}/KineGrant-Protocol-v0.1.1.zip"
+          curl --fail --silent --show-error --location --retry 3 --remote-name "${base}/KineGrant-KGP-001-Whitepaper-v0.1.pdf"
+          sha256sum --check SHA256SUMS.txt
