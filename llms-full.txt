@@ -63,6 +63,9 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - After execution, ObligationCompliance verifies that every capability
   obligation (e.g. emitActionReceipt) has a verifiable fulfillment, and the
   red-team suite includes a suppressed-receipt probe.
+- All runnable demos (two-stack robot, multi-protocol bridge, cross-system
+  ROS2+MCP) run obligation compliance after allowed actions, and the
+  micro-benchmarks include compliance throughput.
 
 ## Executable evidence
 
