@@ -77,6 +77,9 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   agent, action, result, and time, emits machine-readable summaries, and
   checks obligation compliance (`kinegrant-audit` CLI included); the
   micro-benchmarks include audit-summary throughput.
+- A revocation distributor verifies one signed revocation bundle and applies
+  it idempotently to many gates with per-gate acknowledgements
+  (`kinegrant-revoke-distribute` CLI included).
 
 ## Executable evidence
 
