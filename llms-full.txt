@@ -84,7 +84,8 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   (`kinegrant-revoke-distribute` CLI included); fleet reports can be
   re-validated against their bundle.
 - A bounded policy-decision cache wraps policy evaluation with LRU decisions,
-  hit/miss statistics, and automatic invalidation on policy change.
+  hit/miss statistics, and automatic invalidation on policy change; all
+  runnable demos and deployment traces evaluate through it.
 
 ## Executable evidence
 
