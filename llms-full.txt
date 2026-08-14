@@ -73,6 +73,9 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   execution, signed receipt, obligation compliance, and the action journal in
   one fail-closed call; all runnable demos and deployment traces use it, and
   the micro-benchmarks include its throughput.
+- A receipt auditor verifies receipt chains, filters receipts by capability,
+  agent, action, result, and time, emits machine-readable summaries, and
+  checks obligation compliance (`kinegrant-audit` CLI included).
 
 ## Executable evidence
 
