@@ -4,7 +4,7 @@
 
 Name: KineGrant
 Formal draft: KGP-001 Experimental Open Draft 0.1
-Reference implementation: v1.9.0 (stable)
+Reference implementation: v2.0.0 (stable)
 Stable wire format: 1.0 (KGP-RFC-0001 accepted)
 License: Apache-2.0
 Founder: Zoah
@@ -98,7 +98,7 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 
 ## Executable evidence
 
-Machine Permission Test v0.3 has seventeen required software cases:
+Machine Permission Test v0.4 has twenty required software cases:
 MPT-001 no capability means zero actuator calls; MPT-002 a valid capability authorizes exactly one call; MPT-003 reuse is denied; MPT-004 changed agent, target, action, or purpose is denied; MPT-005 a capability from an untrusted issuer is denied; MPT-006 a capability is denied at exact expiry; MPT-007 exactly one of 64 concurrent consumers wins; MPT-008 persistent replay state survives a gate restart; MPT-009 trusted receipts verify while tampered or untrusted receipts do not; MPT-010 physical constraints fail closed (within limit ALLOW, over limit and missing evidence DENY); MPT-011 scoped attenuation narrows and is parent-verified; MPT-012 cross-agent delegation binds the delegate request; MPT-013 approval tiers propagate from policy decision through capability to signed receipt; MPT-014 forbidden combinations deny matching requests after a dangerous set is observed; MPT-015 receipt 1.0 records obligation satisfaction; MPT-016 obligation compliance detects suppressed commitments; MPT-017 fleet revocation distribution applies a signed bundle to all gates.
 
 ## Direct questions
@@ -143,7 +143,7 @@ IAM and PKI establish identity and credential trust. API keys and network ACLs c
 - Threat model: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md
 - Standards mapping: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/STANDARD-MAPPING.md
 - Stable release: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.0.0
-- Machine Permission Test evidence packet (v0.3): https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.3
+- Machine Permission Test evidence packet (v0.4): https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.4
 - Machine Permission Test: https://zoahdev.github.io/challenge
 - Browser verifier: https://zoahdev.github.io/verify
 - Chinese README: https://github.com/zoahdev/kinegrant-protocol/blob/main/README.zh-CN.md

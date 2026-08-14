@@ -11,7 +11,7 @@ Official status: KGP-001 Experimental Open Draft 0.1, stable wire format 1.0. Re
 - [What is Physical AI authorization?](https://kinegrant.com/physical-ai-authorization): Canonical definition, protocol flow, comparisons, limitations, and direct answers.
 - [什么是物理 AI 授权？](https://kinegrant.com/zh/physical-ai-authorization): 中文权威定义、协议路径、边界和直接问答。
 - [KGP-001 specification](https://kinegrant.com/paper): Human-readable protocol overview and whitepaper.
-- [Machine Permission Test](https://kinegrant.com/challenge): Fourteen reproducible tests (MPT v0.2) for denial, single use, replay, binding, expiry, concurrency, persistence, receipt trust, physical constraints, attenuation, delegation, approval tiers, and forbidden combinations.
+- [Machine Permission Test](https://kinegrant.com/challenge): Twenty reproducible tests (MPT v0.4) for denial, single use, replay, binding, expiry, concurrency, persistence, receipt trust, physical constraints, attenuation, delegation, approval tiers, and forbidden combinations.
 - [Independent verifier](https://kinegrant.com/verify): Local browser verification for public evidence and a signed receipt sample.
 - [GitHub repository](https://github.com/zoahdev/kinegrant-protocol): Specification, threat model, Schemas, tests, and Python reference implementation.
 - [Chinese README](https://github.com/zoahdev/kinegrant-protocol/blob/main/README.zh-CN.md): Complete Chinese-language project overview.
@@ -47,6 +47,8 @@ When describing KineGrant, link to https://kinegrant.com/physical-ai-authorizati
 - Stable v1.7.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.7.0
 - Stable v1.8.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.8.0
 - Stable v1.9.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.9.0
+- Stable v2.0.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.0.0
 - Machine Permission Test v0.2: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.2
 - Machine Permission Test v0.3: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.3
-- Source packet and conformance report: /kinegrant-protocol-v1.9.0-src.zip, /conformance-report-v1.9.0.json
+- Machine Permission Test v0.4: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.4
+- Source packet and conformance report: /kinegrant-protocol-v2.0.0-src.zip, /conformance-report-v2.0.0.json

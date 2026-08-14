@@ -1,0 +1,2 @@
+4daf4b9f2caf7cc6bbfddaab0a3142451f2ac085a00f883e70975e7a157cefd5  machine-permission-test.evidence.json
+fdcca1909103c969bf41f9a895eb54c1aeb14a6a90b5efe13c852ebba139bf7c  KineGrant-Machine-Permission-Test-v0.4.zip
