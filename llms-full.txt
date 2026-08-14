@@ -69,7 +69,9 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - The obligation vocabulary includes emitActionReceipt, logAuditEvent, and
   preserveEvidence; the L1-L4 conformance suite is 21/21 and includes
   obligation_compliance, gatekeeper_boundary, revocation_distribution, and
-  gatekeeper_boundary_modelcheck marks.
+  gatekeeper_boundary_modelcheck marks; the conformance report cross-checks
+  generated capabilities and receipt chains with independent JS/Go
+  verifiers.
 - A Gatekeeper component composes sequence check, gate consumption, actuator
   execution, signed receipt, obligation compliance, revocation checks, and
   the action journal in one fail-closed call; all runnable demos and
