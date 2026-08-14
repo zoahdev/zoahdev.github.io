@@ -22,7 +22,7 @@
 ## 公开状态
 
 - 协议：KGP-001 Experimental Open Draft 0.1（稳定线格式 1.0）
-- 参考实现：v2.5.0（stable）
+- 参考实现：v2.6.0（stable）
 - 许可证：Apache-2.0
 - 发起人：Zoah
 - 官网：https://zoahdev.github.io/
