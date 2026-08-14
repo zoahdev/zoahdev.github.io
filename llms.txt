@@ -4,16 +4,17 @@
 
 KineGrant places a verifiable permission path between an AI system's requested action and a machine's physical execution. The precise sequence is: Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Gate -> Physical Action -> Signed Receipt.
 
-Official status: KGP-001 Experimental Open Draft 0.1. Reference implementation v0.1.1. Apache-2.0.
+Official status: KGP-001 Experimental Open Draft 0.1, stable wire format 1.0. Reference implementation v1.0.0 (stable). Apache-2.0.
 
 ## Primary answers
 
 - [What is Physical AI authorization?](https://kinegrant.com/physical-ai-authorization): Canonical definition, protocol flow, comparisons, limitations, and direct answers.
 - [什么是物理 AI 授权？](https://kinegrant.com/zh/physical-ai-authorization): 中文权威定义、协议路径、边界和直接问答。
 - [KGP-001 specification](https://kinegrant.com/paper): Human-readable protocol overview and whitepaper.
-- [Machine Permission Test](https://kinegrant.com/challenge): Nine reproducible tests for denial, single use, replay, binding, expiry, concurrency, persistence, and receipt trust.
+- [Machine Permission Test](https://kinegrant.com/challenge): Fourteen reproducible tests (MPT v0.2) for denial, single use, replay, binding, expiry, concurrency, persistence, receipt trust, physical constraints, attenuation, delegation, approval tiers, and forbidden combinations.
 - [Independent verifier](https://kinegrant.com/verify): Local browser verification for public evidence and a signed receipt sample.
 - [GitHub repository](https://github.com/zoahdev/kinegrant-protocol): Specification, threat model, Schemas, tests, and Python reference implementation.
+- [Chinese README](https://github.com/zoahdev/kinegrant-protocol/blob/main/README.zh-CN.md): Complete Chinese-language project overview.
 - [Full machine-readable context](https://kinegrant.com/llms-full.txt): Extended factual summary and question-answer reference.
 - [Machine-readable entity record](https://kinegrant.com/kinegrant.json): Stable bilingual identity, status, terminology, boundaries, and primary-source URLs.
 - [Chinese machine-readable context](https://kinegrant.com/llms-zh.txt): 中文机器可读项目摘要与准确引用边界。
