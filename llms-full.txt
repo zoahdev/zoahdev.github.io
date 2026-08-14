@@ -87,6 +87,9 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - A bounded policy-decision cache wraps policy evaluation with LRU decisions,
   hit/miss statistics, and automatic invalidation on policy change; all
   runnable demos and deployment traces evaluate through it.
+- A bounded model check verifies the Gatekeeper boundary composition
+  invariants (actuator after the boundary, receipts after gate consumption,
+  journal only on compliant success, no replay double-execution).
 
 ## Executable evidence
 
