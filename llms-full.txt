@@ -76,7 +76,8 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - A receipt auditor verifies receipt chains, filters receipts by capability,
   agent, action, result, and time, emits machine-readable summaries, and
   checks obligation compliance (`kinegrant-audit` CLI included); the
-  micro-benchmarks include audit-summary throughput.
+  micro-benchmarks include audit-summary throughput, and it can export CSV
+  and self-verifying evidence packets.
 - A revocation distributor verifies one signed revocation bundle and applies
   it idempotently to many gates with per-gate acknowledgements
   (`kinegrant-revoke-distribute` CLI included).
