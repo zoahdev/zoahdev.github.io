@@ -70,7 +70,8 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
   L1-L4 conformance suite is 18/18 and includes an obligation_compliance mark.
 - A Gatekeeper component composes sequence check, gate consumption, actuator
   execution, signed receipt, obligation compliance, and the action journal in
-  one fail-closed call.
+  one fail-closed call; all runnable demos and deployment traces use it, and
+  the micro-benchmarks include its throughput.
 
 ## Executable evidence
 
