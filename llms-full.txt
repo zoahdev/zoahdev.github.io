@@ -66,9 +66,9 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - All runnable demos (two-stack robot, multi-protocol bridge, cross-system
   ROS2+MCP) run obligation compliance after allowed actions, and the
   micro-benchmarks include compliance throughput.
-- The obligation vocabulary includes emitActionReceipt and logAuditEvent; the
-  L1-L4 conformance suite is 19/19 and includes obligation_compliance and
-  gatekeeper_boundary marks.
+- The obligation vocabulary includes emitActionReceipt, logAuditEvent, and
+  preserveEvidence; the L1-L4 conformance suite is 19/19 and includes
+  obligation_compliance and gatekeeper_boundary marks.
 - A Gatekeeper component composes sequence check, gate consumption, actuator
   execution, signed receipt, obligation compliance, revocation checks, and
   the action journal in one fail-closed call; all runnable demos and
