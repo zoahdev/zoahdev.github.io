@@ -1,0 +1,33 @@
+name: uptime-check
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check kinegrant.com
+        id: check
+        run: |
+          code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 30 https://kinegrant.com/ 2>/dev/null || echo 000)
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "checked $(date -u +%Y-%m-%dT%H:%M:%SZ) -> $code"
+
+      - name: Open alert issue when down
+        if: steps.check.outputs.code != '200'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh issue list --repo zoahdev/zoahdev.github.io --label uptime --state open --json number --jq 'length' 2>/dev/null || echo 0)
+          if [ "$open" -eq 0 ]; then
+            gh issue create --repo zoahdev/zoahdev.github.io \
+              --title "Uptime alert: kinegrant.com returned ${{ steps.check.outputs.code }}" \
+              --label uptime \
+              --body "Scheduled check at $(date -u) returned HTTP ${{ steps.check.outputs.code }}. Workflow: https://github.com/zoahdev/zoahdev.github.io/actions"
+          fi
