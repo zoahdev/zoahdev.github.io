@@ -1,0 +1,2 @@
+250c0cc4f65f5ca2dcbaa5f7c79350e258bf92a562f4bc9bdc220f9e959a7e94  conformance-report.json
+84f7cf5b708317ffaab38df3f8c9da972ffbffb995d70ea466f26f0af10446ce  kinegrant-protocol-v2.21.0-src.zip

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KineGrant Policy Bundle Verifier</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+    textarea { width: 100%; box-sizing: border-box; font-family: ui-monospace, monospace; font-size: 0.85rem; min-height: 8rem; }
+    .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .col { flex: 1; min-width: 18rem; }
+    button { padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; }
+    pre { background: #f6f8fa; padding: 1rem; overflow: auto; white-space: pre-wrap; word-break: break-all; }
+    .ok { color: #0a7d33; font-weight: bold; }
+    .err { color: #b00020; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>KineGrant 策略包浏览器验证器</h1>
+  <p>本地验证：签名、信任机构、策略 id、时间窗、规则摘要、当前版本选择、能力、衰减链、禁止组合、收据链、MPT 证据、撤销包、策略分发报告、收据证据包、审计 CSV、复现报告、撤销分发报告、策略分析报告、ODRL 映射、动作词汇、义务词汇与身份语法。所有计算都在你的浏览器里完成，不上传任何数据。</p>
+
+  <div class="row">
+    <div class="col">
+      <label>策略包 JSON（带签名 envelope）</label>
+      <textarea id="bundle" placeholder='{ "alg": "EdDSA", "kid": "kinegrant:key:ed25519:...", "payload": { ... }, "signature": "..." }'></textarea>
+    </div>
+    <div class="col">
+      <label>信任机构 kid 列表（JSON 数组）</label>
+      <textarea id="authorities" placeholder='["kinegrant:key:ed25519:..."]'>[]</textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label>可选：已撤销版本（JSON 数组，格式 "policy_id:version"）</label>
+      <textarea id="revoked" placeholder='["urn:kinegrant:policy:space-7:2"]'>[]</textarea>
+    </div>
+    <div class="col">
+      <label>可选：全部策略包 payloads（JSON 数组，用于当前版本选择）</label>
+      <textarea id="bundles" placeholder='[{ "policy_id": "...", "version": 1, ... }]'>[]</textarea>
+    </div>
+  </div>
+  <p>
+    <button id="verify">验证策略包</button>
+    <button id="current">选择当前版本</button>
+  </p>
+  <div class="row">
+    <div class="col">
+      <label>能力 envelope JSON</label>
+      <textarea id="capability" placeholder='{ "alg": "EdDSA", "kid": "...", "payload": { "type": "kinegrant:PhysicalActionCapability", ... }, "signature": "..." }'></textarea>
+    </div>
+    <div class="col">
+      <label>请求 JSON + 信任签发者（JSON 数组，第二个框）</label>
+      <textarea id="request" placeholder='{ "request_id": "...", "agent": "...", "target": "...", "action": "open", "purpose": "delivery" }'></textarea>
+      <textarea id="issuers" placeholder='["kinegrant:key:ed25519:..."]'>[]</textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label>收据链 entries JSON 数组</label>
+      <textarea id="receipts" placeholder='[{ "alg": "EdDSA", "kid": "...", "payload": { "type": "kinegrant:PhysicalActionReceipt", ... }, "signature": "..." }]'>[]</textarea>
+    </div>
+    <div class="col">
+      <label>可选：信任执行方（JSON 数组）</label>
+      <textarea id="executors" placeholder='["kinegrant:key:ed25519:..."]'>[]</textarea>
+    </div>
+  </div>
+  <p>
+    <button id="verify-capability">验证能力</button>
+    <button id="verify-receipts">验证收据链</button>
+  </p>
+  <div class="row">
+    <div class="col">
+      <label>MPT 证据 JSON（Machine Permission Test 输出）</label>
+      <textarea id="mpt" placeholder='{ "schema_version": "0.4", "cases": [...], "summary": {...}, "overall_result": "PASS" }'></textarea>
+    </div>
+  </div>
+  <p><button id="verify-mpt">验证 MPT 证据</button></p>
+  <div class="row">
+    <div class="col">
+      <label>撤销包 JSON（带签名 envelope）</label>
+      <textarea id="revocation" placeholder='{ "alg": "EdDSA", "kid": "...", "payload": { "type": "kinegrant:RevocationBundle", ... }, "signature": "..." }'></textarea>
+    </div>
+    <div class="col">
+      <label>策略分发报告 JSON + 对应策略包 JSON（第二个框）</label>
+      <textarea id="distribution-report" placeholder='{ "type": "kinegrant:PolicyDistributionReport", ... }'></textarea>
+      <textarea id="distribution-bundle" placeholder='{ "alg": "EdDSA", "kid": "...", "payload": { "type": "kinegrant:PolicyBundle", ... }, "signature": "..." }'></textarea>
+    </div>
+  </div>
+  <p>
+    <button id="verify-revocation">验证撤销包</button>
+    <button id="verify-distribution">验证分发报告</button>
+  </p>
+  <div class="row">
+    <div class="col">
+      <label>收据证据包 JSON（ReceiptAuditor 导出）</label>
+      <textarea id="evidence-packet" placeholder='{ "type": "kinegrant:ReceiptEvidencePacket", "schema_version": "0.1", "summary": {...}, "receipts": [...], "packet_digest": "sha256:..." }'></textarea>
+    </div>
+  </div>
+  <p><button id="verify-packet">验证收据证据包</button></p>
+  <div class="row">
+    <div class="col">
+      <label>审计 CSV 文本（ReceiptAuditor 导出）</label>
+      <textarea id="audit-csv" placeholder='receipt_id,capability_id,agent,target,action,purpose,result,started_at,finished_at,evidence_hash,previous_receipt_hash,failure_reason,obligation_results&#10;...'></textarea>
+    </div>
+  </div>
+  <p><button id="verify-csv">验证审计 CSV</button></p>
+  <div class="row">
+    <div class="col">
+      <label>外部复现报告 JSON（challenge/reproduce 生成）</label>
+      <textarea id="reproduction" placeholder='{ "schema_version": "0.1", "report_id": "urn:kinegrant:reproduction:...", "verification": { "required_cases": 22, "passed_cases": 22 }, "overall_result": "PASS", ... }'></textarea>
+    </div>
+  </div>
+  <p><button id="verify-reproduction">验证复现报告</button></p>
+  <div class="row">
+    <div class="col">
+      <label>撤销分发报告 JSON + 可选撤销包 JSON（第二个框，用于绑定校验）</label>
+      <textarea id="revocation-distribution" placeholder='{ "type": "kinegrant:RevocationDistributionReport", ... }'></textarea>
+      <textarea id="revocation-distribution-bundle" placeholder='可选：{ "alg": "EdDSA", "kid": "...", "payload": { "type": "kinegrant:RevocationBundle", ... }, "signature": "..." }'></textarea>
+    </div>
+  </div>
+  <p><button id="verify-revocation-distribution">验证撤销分发报告</button></p>
+  <p><button id="odrl">从策略包生成 ODRL</button>（使用上方策略包与信任机构输入）</p>
+  <div class="row">
+    <div class="col">
+      <label>动作列表 JSON 数组（kg.action.* 词汇）</label>
+      <textarea id="vocabulary" placeholder='["kg.action.open", "kg.action.record"]'>[]</textarea>
+    </div>
+  </div>
+  <p><button id="verify-vocabulary">校验动作词汇</button></p>
+  <div class="row">
+    <div class="col">
+      <label>义务列表 JSON 数组（已知义务词汇）</label>
+      <textarea id="obligations" placeholder='["emitActionReceipt", "logAuditEvent"]'>[]</textarea>
+    </div>
+  </div>
+  <p><button id="verify-obligations">校验义务词汇</button></p>
+  <div class="row">
+    <div class="col">
+      <label>身份列表 JSON 数组（urn:kinegrant:agent|target|policy:命名空间:本地 ID）</label>
+      <textarea id="identities" placeholder='["urn:kinegrant:agent:zoah:delivery-robot-07", "urn:kinegrant:target:zoah:door-7"]'>[]</textarea>
+    </div>
+  </div>
+  <p><button id="verify-identities">校验身份语法</button></p>
+  <div class="row">
+    <div class="col">
+      <label>策略分析报告 JSON（analyze_policy_bundle 输出）</label>
+      <textarea id="analysis-report" placeholder='{ "type": "kinegrant:PolicyBundleAnalysis", "schema_version": "0.1", "policy_id": "...", "bundle_id": "...", "bundle_version": 1, "overall_result": "PASS", "summary": { "findings": 0, "errors": 0, "warnings": 0, "info": 0 }, "findings": [] }'></textarea>
+    </div>
+    <div class="col">
+      <label>对应策略包 JSON + 信任机构 kid 列表（第二个框）</label>
+      <textarea id="analysis-bundle" placeholder='{ "alg": "EdDSA", "kid": "...", "payload": { "type": "kinegrant:PolicyBundle", ... }, "signature": "..." }'></textarea>
+      <textarea id="analysis-authorities" placeholder='["kinegrant:key:ed25519:..."]'>[]</textarea>
+    </div>
+  </div>
+  <p><button id="verify-analysis">验证策略分析报告</button></p>
+  <div class="row">
+    <div class="col">
+      <label>衰减链 JSON 数组（root → 子能力，每项都是签名 envelope）</label>
+      <textarea id="delegation-chain" placeholder='[{ "alg": "EdDSA", "kid": "...", "payload": { "type": "kinegrant:PhysicalActionCapability", "version": "1.0", ... }, "signature": "..." }]'>[]</textarea>
+    </div>
+    <div class="col">
+      <label>终端请求 JSON + 信任签发者 kid 列表（第二个框）</label>
+      <textarea id="delegation-request" placeholder='{ "request_id": "...", "agent": "...", "target": "...", "action": "open", "purpose": "delivery", "issued_at": "..." }'></textarea>
+      <textarea id="delegation-issuers" placeholder='["kinegrant:key:ed25519:..."]'>[]</textarea>
+    </div>
+  </div>
+  <p><button id="verify-delegation">验证衰减链</button></p>
+  <div class="row">
+    <div class="col">
+      <label>禁止组合报告 JSON（kinegrant:SequenceCheckReport）</label>
+      <textarea id="sequence-report" placeholder='{ "type": "kinegrant:SequenceCheckReport", "schema_version": "0.1", "request_digest": "sha256:...", "journal_digest": "sha256:...", "checked_at": "...", "verdict": { "allowed": false, "reason": "forbidden_combination", "matched_combination_ids": ["forbid-1"] } }'></textarea>
+    </div>
+    <div class="col">
+      <label>序列策略 JSON（combinations）+ 请求 JSON（第二个框）</label>
+      <textarea id="sequence-policy" placeholder='{ "combinations": [ { "combination_id": "forbid-1", "patterns": [["record", "*"], ["train_on_data", "*"]], "trigger": ["train_on_data", "*"] } ] }'></textarea>
+      <textarea id="sequence-request" placeholder='{ "type": "kinegrant:ActionRequest", "version": "0.1", "request_id": "...", "agent": "...", "target": "...", "action": "train_on_data", "purpose": "training", "issued_at": "...", "context": {} }'></textarea>
+    </div>
+    <div class="col">
+      <label>动作日志 JSON 数组（action/target/at）</label>
+      <textarea id="sequence-journal" placeholder='[ { "action": "record", "target": "cam-1", "at": "2026-08-15T00:00:00Z" } ]'>[]</textarea>
+    </div>
+  </div>
+  <p>
+    <button id="verify-sequence">验证禁止组合报告</button>
+    <button id="eval-sequence">直接评估禁止组合</button>
+  </p>
+  <pre id="output">等待操作…</pre>
+
+  <script type="module">
+    import {
+      canonicalJson,
+      verifyPolicyBundle,
+      currentPolicyVersion,
+      verifyCapability,
+      verifyReceiptChain,
+      verifyMptEvidence,
+      verifyPolicyDistributionReport,
+      verifyReceiptEvidencePacket,
+      verifyRevocationBundle,
+      verifyAuditCsv,
+      verifyReproductionReport,
+      verifyRevocationDistributionReport,
+      policyBundleToOdrl,
+      validateActionVocabulary,
+      validateObligationVocabulary,
+      validateIdentitySyntax,
+      verifyPolicyAnalysisReport,
+      verifyDelegationChain,
+      evaluateSequencePolicy,
+      verifySequenceCheckReport,
+    } from "./policy-bundle-verifier.js";
+
+    const bundleInput = document.getElementById("bundle");
+    const authoritiesInput = document.getElementById("authorities");
+    const revokedInput = document.getElementById("revoked");
+    const bundlesInput = document.getElementById("bundles");
+    const capabilityInput = document.getElementById("capability");
+    const requestInput = document.getElementById("request");
+    const issuersInput = document.getElementById("issuers");
+    const receiptsInput = document.getElementById("receipts");
+    const executorsInput = document.getElementById("executors");
+    const mptInput = document.getElementById("mpt");
+    const revocationInput = document.getElementById("revocation");
+    const distributionReportInput = document.getElementById("distribution-report");
+    const distributionBundleInput = document.getElementById("distribution-bundle");
+    const evidencePacketInput = document.getElementById("evidence-packet");
+    const auditCsvInput = document.getElementById("audit-csv");
+    const reproductionInput = document.getElementById("reproduction");
+    const revocationDistributionInput = document.getElementById("revocation-distribution");
+    const revocationDistributionBundleInput = document.getElementById("revocation-distribution-bundle");
+    const vocabularyInput = document.getElementById("vocabulary");
+    const obligationsInput = document.getElementById("obligations");
+    const identitiesInput = document.getElementById("identities");
+    const analysisReportInput = document.getElementById("analysis-report");
+    const analysisBundleInput = document.getElementById("analysis-bundle");
+    const analysisAuthoritiesInput = document.getElementById("analysis-authorities");
+    const delegationChainInput = document.getElementById("delegation-chain");
+    const delegationRequestInput = document.getElementById("delegation-request");
+    const delegationIssuersInput = document.getElementById("delegation-issuers");
+    const sequenceReportInput = document.getElementById("sequence-report");
+    const sequencePolicyInput = document.getElementById("sequence-policy");
+    const sequenceRequestInput = document.getElementById("sequence-request");
+    const sequenceJournalInput = document.getElementById("sequence-journal");
+    const output = document.getElementById("output");
+
+    function showOk(text) {
+      output.className = "ok";
+      output.textContent = text;
+    }
+    function showErr(text) {
+      output.className = "err";
+      output.textContent = text;
+    }
+    function parseJson(value, label) {
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        throw new Error(`${label} JSON 解析失败: ${error.message}`);
+      }
+    }
+
+    document.getElementById("verify").addEventListener("click", async () => {
+      try {
+        const bundle = parseJson(bundleInput.value, "策略包");
+        const authorities = parseJson(authoritiesInput.value, "信任机构");
+        const payload = await verifyPolicyBundle(
+          bundle,
+          new Set(authorities)
+        );
+        showOk(
+          "POLICY BUNDLE VALID\npolicy_id: " + payload.policy_id +
+          "\nversion: " + payload.version +
+          "\nbundle_id: " + payload.bundle_id
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("current").addEventListener("click", () => {
+      try {
+        const bundles = parseJson(bundlesInput.value, "策略包列表");
+        const revoked = parseJson(revokedInput.value, "撤销列表");
+        const current = currentPolicyVersion(bundles, { revoked });
+        if (current === null) {
+          showErr("没有当前版本（全部撤销或不在有效期内）");
+          return;
+        }
+        showOk(
+          "当前版本: " + current.version + "\n" +
+          JSON.stringify(current, null, 2)
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-capability").addEventListener("click", async () => {
+      try {
+        const envelope = parseJson(capabilityInput.value, "能力");
+        const request = parseJson(requestInput.value, "请求");
+        const issuers = parseJson(issuersInput.value, "信任签发者");
+        const payload = await verifyCapability(
+          envelope,
+          request,
+          new Set(issuers)
+        );
+        showOk(
+          "CAPABILITY VALID\ncapability_id: " + payload.capability_id +
+          "\nversion: " + payload.version
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-receipts").addEventListener("click", async () => {
+      try {
+        const entries = parseJson(receiptsInput.value, "收据链");
+        const executors = parseJson(executorsInput.value, "信任执行方");
+        await verifyReceiptChain(entries, new Set(executors));
+        showOk("RECEIPT CHAIN VALID");
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-mpt").addEventListener("click", () => {
+      try {
+        const evidence = parseJson(mptInput.value, "MPT 证据");
+        const result = verifyMptEvidence(evidence);
+        showOk(
+          `MPT EVIDENCE VALID (${result.overall_result}: ${result.summary.passed}/${result.summary.total})`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-revocation").addEventListener("click", async () => {
+      try {
+        const bundle = parseJson(revocationInput.value, "撤销包");
+        const authorities = parseJson(authoritiesInput.value, "信任机构");
+        await verifyRevocationBundle(bundle, new Set(authorities));
+        showOk("REVOCATION BUNDLE VALID");
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-distribution").addEventListener("click", async () => {
+      try {
+        const report = parseJson(distributionReportInput.value, "分发报告");
+        const bundle = parseJson(distributionBundleInput.value, "策略包");
+        const authorities = parseJson(authoritiesInput.value, "信任机构");
+        await verifyPolicyDistributionReport(
+          report,
+          bundle,
+          new Set(authorities)
+        );
+        showOk("POLICY DISTRIBUTION REPORT VALID");
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-packet").addEventListener("click", async () => {
+      try {
+        const packet = parseJson(evidencePacketInput.value, "收据证据包");
+        const result = await verifyReceiptEvidencePacket(packet);
+        showOk(`EVIDENCE PACKET VALID (${result.receipts} receipts)`);
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-csv").addEventListener("click", () => {
+      try {
+        const result = verifyAuditCsv(auditCsvInput.value);
+        showOk(`AUDIT CSV VALID (${result.rows} rows)`);
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-reproduction").addEventListener("click", () => {
+      try {
+        const report = parseJson(reproductionInput.value, "复现报告");
+        const result = verifyReproductionReport(report);
+        showOk(
+          `REPRODUCTION REPORT VALID (${result.passed_cases}/${result.required_cases})`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-revocation-distribution").addEventListener("click", async () => {
+      try {
+        const report = parseJson(revocationDistributionInput.value, "撤销分发报告");
+        const bundleValue = revocationDistributionBundleInput.value.trim();
+        const bundle = bundleValue
+          ? parseJson(bundleValue, "撤销包")
+          : undefined;
+        const authorities = parseJson(authoritiesInput.value, "信任机构");
+        const result = await verifyRevocationDistributionReport(
+          report,
+          bundle,
+          new Set(authorities)
+        );
+        showOk(
+          `REVOCATION DISTRIBUTION REPORT VALID (${result.gates} gates, added=${result.added_total})`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("odrl").addEventListener("click", async () => {
+      try {
+        const bundle = parseJson(bundleInput.value, "策略包");
+        const authorities = parseJson(authoritiesInput.value, "信任机构");
+        const document = await policyBundleToOdrl(
+          bundle,
+          new Set(authorities)
+        );
+        showOk(JSON.stringify(document, null, 2));
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-vocabulary").addEventListener("click", () => {
+      try {
+        const actions = parseJson(vocabularyInput.value, "动作列表");
+        const result = validateActionVocabulary(actions);
+        showOk(`ACTION VOCABULARY VALID (${result.actions} actions)`);
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-obligations").addEventListener("click", () => {
+      try {
+        const obligations = parseJson(obligationsInput.value, "义务列表");
+        const result = validateObligationVocabulary(obligations);
+        showOk(
+          `OBLIGATION VOCABULARY VALID (${result.obligations} obligations)`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-identities").addEventListener("click", () => {
+      try {
+        const identifiers = parseJson(identitiesInput.value, "身份列表");
+        const result = validateIdentitySyntax(identifiers);
+        const lines = result.identifiers.map(
+          (entry) =>
+            `${entry.value} -> kind=${entry.kind} namespace=${entry.namespace} local_id=${entry.local_id}`
+        );
+        showOk(`IDENTITY SYNTAX VALID (${result.count} identifiers)\n` + lines.join("\n"));
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-analysis").addEventListener("click", async () => {
+      try {
+        const report = parseJson(analysisReportInput.value, "策略分析报告");
+        const bundle = parseJson(analysisBundleInput.value, "策略包");
+        const authorities = parseJson(analysisAuthoritiesInput.value, "信任机构");
+        const result = await verifyPolicyAnalysisReport(
+          report,
+          bundle,
+          new Set(authorities)
+        );
+        showOk(
+          `POLICY ANALYSIS VALID (${result.overall_result}: ` +
+            `${result.summary.errors} errors, ${result.summary.warnings} warnings, ` +
+            `${result.summary.info} info, ${result.findings.length} findings)`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-delegation").addEventListener("click", async () => {
+      try {
+        const chain = parseJson(delegationChainInput.value, "衰减链");
+        const request = parseJson(delegationRequestInput.value, "终端请求");
+        const issuers = parseJson(delegationIssuersInput.value, "信任签发者");
+        const result = await verifyDelegationChain(
+          chain,
+          new Set(issuers),
+          request
+        );
+        showOk(
+          `DELEGATION CHAIN VALID (depth=${result.depth}, terminal=${result.terminal_capability_id})`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("verify-sequence").addEventListener("click", async () => {
+      try {
+        const report = parseJson(sequenceReportInput.value, "禁止组合报告");
+        const policy = parseJson(sequencePolicyInput.value, "序列策略");
+        const request = parseJson(sequenceRequestInput.value, "请求");
+        const journal = parseJson(sequenceJournalInput.value, "动作日志");
+        const result = await verifySequenceCheckReport(
+          report,
+          policy,
+          request,
+          journal
+        );
+        showOk(
+          `SEQUENCE CHECK VALID (allowed=${result.allowed}, reason=${result.reason}, ` +
+            `matched=${result.matched_combination_ids.join(",") || "-"})`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    document.getElementById("eval-sequence").addEventListener("click", () => {
+      try {
+        const policy = parseJson(sequencePolicyInput.value, "序列策略");
+        const request = parseJson(sequenceRequestInput.value, "请求");
+        const journal = parseJson(sequenceJournalInput.value, "动作日志");
+        const verdict = evaluateSequencePolicy(policy, request, journal);
+        showOk(
+          `SEQUENCE EVAL (allowed=${verdict.allowed}, reason=${verdict.reason}, ` +
+            `matched=${verdict.matched_combination_ids.join(",") || "-"})`
+        );
+      } catch (error) {
+        showErr("INVALID: " + error.message);
+      }
+    });
+
+    window.KineGrantVerifierDemo = { canonicalJson };
+  </script>
+</body>
+</html>
