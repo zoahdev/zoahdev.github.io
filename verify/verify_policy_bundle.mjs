@@ -34,9 +34,11 @@ import {
   verifyDeviceAttestation,
   verifyBridgeDemoReport,
   verifyHardwareTrustPacket,
+  verifyDeviceToPolicyExport,
   verifyRobotDemoReport,
   verifyCameraConsentTrace,
   verifyFullLifecycleReport,
+  verifyEvidenceExportPacket,
 } from "./policy-bundle-verifier.js";
 
 function load(path) {
@@ -330,6 +332,16 @@ try {
         `${result.sensor_commitments} sensor commitments, ` +
         `${result.receipt_checkpoints} receipt checkpoints)`
     );
+  } else if (command === "device-to-policy") {
+    const [packetPath] = args;
+    const packet = load(packetPath);
+    const result = await verifyDeviceToPolicyExport(packet);
+    console.log(
+      `DEVICE-TO-POLICY EXPORT VALID (device=${result.device_id}, ` +
+        `policy=${result.policy_id}, capability=${result.capability_id}, ` +
+        `receipt=${result.receipt_id}, boot_counter=${result.boot_counter}, ` +
+        `${result.artifacts_total} artifacts)`
+    );
   } else if (command === "robot-demo") {
     const [reportPath] = args;
     const report = load(reportPath);
@@ -363,6 +375,14 @@ try {
     console.log(
       `FULL LIFECYCLE REPORT VALID (PASS: ${result.phases} phases, ` +
         `policy=${result.policy_id}, bundle_version=${result.bundle_version})`
+    );
+  } else if (command === "evidence-export") {
+    const [packetPath] = args;
+    const packet = load(packetPath);
+    const result = verifyEvidenceExportPacket(packet);
+    console.log(
+      `EVIDENCE EXPORT PACKET VALID (${result.artifacts} artifacts, ` +
+        `${result.unique_kinds} kinds, digests verified)`
     );
   } else if (command === "sequence-eval") {
     const [policyPath, requestPath, journalPath] = args;
@@ -408,9 +428,11 @@ try {
       "attestation <attestation.json> | " +
       "bridge <report.json> | " +
       "hardware-packet <packet.json> | " +
+      "device-to-policy <packet.json> | " +
       "robot-demo <report.json> | " +
       "camera-consent <trace.json> | " +
-      "full-lifecycle <report.json> <policy-bundle.json> <revocation-bundle.json> <authorities.json>"
+      "full-lifecycle <report.json> <policy-bundle.json> <revocation-bundle.json> <authorities.json> | " +
+      "evidence-export <packet.json>"
     );
   }
 } catch (error) {

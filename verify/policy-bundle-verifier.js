@@ -3643,6 +3643,285 @@ export async function verifyHardwareTrustPacket(
   };
 }
 
+const DEVICE_TO_POLICY_KEYS = [
+  "capability",
+  "device_attestation",
+  "device_id",
+  "gate_decision",
+  "generated_at",
+  "overall_result",
+  "policy_bundle",
+  "receipt",
+  "receipt_checkpoint",
+  "request",
+  "schema_version",
+  "sensor_commitment",
+  "summary",
+  "trusted_policy_issuers",
+  "type",
+];
+const GATE_DECISION_KEYS = [
+  "allowed",
+  "capability_id",
+  "checked_at",
+  "policy_digest",
+  "reason",
+];
+const DEVICE_TO_POLICY_SUMMARY_KEYS = [
+  "artifacts_total",
+  "attestation_bound",
+  "capability_verified",
+  "checkpoint_bound",
+  "cross_references_ok",
+  "decision_consistent",
+  "policy_verified",
+  "receipt_bound",
+  "sensor_bound",
+];
+
+export async function verifyDeviceToPolicyExport(
+  packet,
+  {
+    trustedAuthorities,
+    trustedIssuers,
+    trustedExecutors,
+    trustedSensors,
+    trustedNotaries,
+    trustedDevices,
+    now,
+  } = {}
+) {
+  if (typeof packet !== "object" || packet === null || Array.isArray(packet)) {
+    throw new Error("device-to-policy export packet must be an object");
+  }
+  if (Object.keys(packet).sort().join(",") !== DEVICE_TO_POLICY_KEYS.join(",")) {
+    throw new Error("device-to-policy export packet fields are invalid");
+  }
+  if (packet.type !== "kinegrant:DeviceToPolicyExportPacket") {
+    throw new Error("wrong device-to-policy export packet type");
+  }
+  if (packet.schema_version !== "0.1") {
+    throw new Error("unsupported device-to-policy export packet version");
+  }
+  if (
+    typeof packet.generated_at !== "string" ||
+    !/Z$|[+-]\d{2}:\d{2}$/.test(packet.generated_at)
+  ) {
+    throw new Error(
+      "device-to-policy export packet generated_at must be a timezone-aware ISO timestamp"
+    );
+  }
+  parseTime(packet.generated_at);
+  if (packet.overall_result !== "PASS") {
+    throw new Error("device-to-policy export packet overall_result must be PASS");
+  }
+  if (typeof packet.device_id !== "string" || packet.device_id.length === 0) {
+    throw new Error("device-to-policy export packet device_id must be non-empty");
+  }
+  if (
+    !Array.isArray(packet.trusted_policy_issuers) ||
+    packet.trusted_policy_issuers.length === 0 ||
+    packet.trusted_policy_issuers.some((item) => typeof item !== "string" || item.length === 0)
+  ) {
+    throw new Error(
+      "device-to-policy export packet trusted_policy_issuers must be a non-empty string array"
+    );
+  }
+
+  const policyPayload = await verifyPolicyBundle(
+    packet.policy_bundle,
+    new Set(packet.trusted_policy_issuers),
+    { now }
+  );
+  const rulePolicyIds = new Set(
+    policyPayload.rules.map((rule) => rule.policy_id)
+  );
+
+  const request = packet.request;
+  if (
+    typeof request !== "object" ||
+    request === null ||
+    Array.isArray(request)
+  ) {
+    throw new Error("device-to-policy export packet request must be an object");
+  }
+  if (request.type !== "kinegrant:ActionRequest" || request.version !== "0.1") {
+    throw new Error(
+      "device-to-policy export packet request must be a v0.1 action request"
+    );
+  }
+  const requestDigest = await digestOfObject(request);
+  const capPayload = await verifyCapability(
+    packet.capability,
+    request,
+    trustedIssuers ?? new Set(packet.trusted_policy_issuers)
+  );
+  if (capPayload.request_digest !== requestDigest) {
+    throw new Error("capability does not authorize this request");
+  }
+  const expectedPolicyDigest =
+    "sha256:" +
+    (await sha256Hex(
+      new TextEncoder().encode(
+        canonicalJson({
+          rules: policyPayload.rules,
+          trusted_policy_issuers: [...packet.trusted_policy_issuers].sort(),
+        })
+      )
+    ));
+  if (capPayload.policy_digest !== expectedPolicyDigest) {
+    throw new Error(
+      "capability policy digest does not match the export rules and trust set"
+    );
+  }
+  if (
+    !Array.isArray(capPayload.matched_policy_ids) ||
+    capPayload.matched_policy_ids.length === 0 ||
+    capPayload.matched_policy_ids.some((id) => !rulePolicyIds.has(id))
+  ) {
+    throw new Error("capability matched policies do not match the policy bundle");
+  }
+
+  const decision = packet.gate_decision;
+  if (
+    typeof decision !== "object" ||
+    decision === null ||
+    Array.isArray(decision)
+  ) {
+    throw new Error("gate decision must be an object");
+  }
+  if (Object.keys(decision).sort().join(",") !== GATE_DECISION_KEYS.join(",")) {
+    throw new Error("gate decision fields are invalid");
+  }
+  if (decision.allowed !== true) {
+    throw new Error("gate decision must be allow for a PASS export");
+  }
+  if (typeof decision.reason !== "string" || decision.reason.length === 0) {
+    throw new Error("gate decision reason is invalid");
+  }
+  if (
+    typeof decision.checked_at !== "string" ||
+    Number.isNaN(Date.parse(decision.checked_at))
+  ) {
+    throw new Error("gate decision checked_at is invalid");
+  }
+  if (decision.capability_id !== capPayload.capability_id) {
+    throw new Error("gate decision does not reference the verified capability");
+  }
+  if (decision.policy_digest !== capPayload.policy_digest) {
+    throw new Error("gate decision does not reference the verified policy");
+  }
+
+  await verifyReceiptChain([packet.receipt], trustedExecutors);
+  const receiptPayload = await verifyEnvelope(packet.receipt);
+  if (receiptPayload.type !== "kinegrant:PhysicalActionReceipt") {
+    throw new Error("receipt payload type is invalid");
+  }
+  if (receiptPayload.capability_id !== capPayload.capability_id) {
+    throw new Error("receipt does not bind the issued capability");
+  }
+  if (receiptPayload.request_digest !== requestDigest) {
+    throw new Error("receipt request digest does not match the request");
+  }
+  if (
+    receiptPayload.agent !== request.agent ||
+    receiptPayload.action !== request.action ||
+    receiptPayload.purpose !== request.purpose ||
+    !globMatch(receiptPayload.target, request.target)
+  ) {
+    throw new Error("receipt execution details do not match the request");
+  }
+  if (
+    typeof receiptPayload.evidence_hash !== "string" ||
+    !SHA256_RE.test(receiptPayload.evidence_hash)
+  ) {
+    throw new Error("receipt evidence_hash is invalid");
+  }
+
+  const sensorPayload = await verifySensorCommitment(
+    packet.sensor_commitment,
+    { trustedSensors }
+  );
+  const sensorHash = await sensorEvidenceHash(packet.sensor_commitment);
+  if (receiptPayload.evidence_hash !== sensorHash) {
+    throw new Error("receipt evidence does not match the sensor commitment");
+  }
+  if (
+    !Array.isArray(sensorPayload.readings) ||
+    sensorPayload.readings.length === 0 ||
+    !sensorPayload.readings.some(
+      (reading) => reading.source_id === packet.device_id
+    )
+  ) {
+    throw new Error("sensor readings are not bound to the attested device");
+  }
+
+  const checkpoint = await verifyReceiptCheckpoint(
+    packet.receipt_checkpoint,
+    { trustedNotaries }
+  );
+  const expectedChainDigest =
+    "sha256:" +
+    (await sha256Hex(
+      new TextEncoder().encode(canonicalJson([packet.receipt]))
+    ));
+  if (checkpoint.chain_digest !== expectedChainDigest) {
+    throw new Error("receipt checkpoint does not anchor this receipt chain");
+  }
+
+  const attestation = await verifyDeviceAttestation(
+    packet.device_attestation,
+    { trustedDevices }
+  );
+  if (attestation.device_id !== packet.device_id) {
+    throw new Error("device attestation does not match the export device_id");
+  }
+
+  const summary = packet.summary;
+  if (
+    typeof summary !== "object" ||
+    summary === null ||
+    Array.isArray(summary)
+  ) {
+    throw new Error("device-to-policy export packet summary must be an object");
+  }
+  if (
+    Object.keys(summary).sort().join(",") !==
+    DEVICE_TO_POLICY_SUMMARY_KEYS.join(",")
+  ) {
+    throw new Error("device-to-policy export packet summary fields are invalid");
+  }
+  const expectedSummary = {
+    artifacts_total: 9,
+    policy_verified: true,
+    capability_verified: true,
+    decision_consistent: true,
+    receipt_bound: true,
+    sensor_bound: true,
+    checkpoint_bound: true,
+    attestation_bound: true,
+    cross_references_ok: true,
+  };
+  for (const [key, value] of Object.entries(expectedSummary)) {
+    if (summary[key] !== value) {
+      throw new Error(
+        `device-to-policy export packet summary ${key} is inconsistent`
+      );
+    }
+  }
+  return {
+    valid: true,
+    device_id: packet.device_id,
+    policy_id: policyPayload.policy_id,
+    policy_digest: capPayload.policy_digest,
+    capability_id: capPayload.capability_id,
+    receipt_id: receiptPayload.receipt_id,
+    evidence_hash: receiptPayload.evidence_hash,
+    boot_counter: attestation.boot_counter,
+    artifacts_total: summary.artifacts_total,
+  };
+}
+
 const ROBOT_OUTCOME_KEYS = [
   "action",
   "actuator_calls",
@@ -3932,6 +4211,102 @@ export async function verifyFullLifecycleReport(
   };
 }
 
+const EVIDENCE_EXPORT_KINDS = new Set([
+  "receipt_evidence_packet",
+  "audit_csv",
+  "mpt_evidence",
+  "conformance_report",
+  "reproduction_report",
+  "policy_analysis",
+  "fleet_audit",
+  "security_review_kit",
+  "sensor_commitment",
+  "receipt_checkpoint",
+  "device_attestation",
+]);
+const EVIDENCE_EXPORT_KEYS = [
+  "artifacts",
+  "generated_at",
+  "overall_result",
+  "schema_version",
+  "summary",
+  "type",
+];
+const EVIDENCE_ARTIFACT_KEYS = ["kind", "name", "sha256"];
+
+export function verifyEvidenceExportPacket(packet) {
+  if (typeof packet !== "object" || packet === null || Array.isArray(packet)) {
+    throw new Error("evidence export packet must be an object");
+  }
+  if (Object.keys(packet).sort().join(",") !== EVIDENCE_EXPORT_KEYS.join(",")) {
+    throw new Error("evidence export packet fields are invalid");
+  }
+  if (packet.type !== "kinegrant:EvidenceExportPacket") {
+    throw new Error("wrong evidence export packet type");
+  }
+  if (packet.schema_version !== "0.1") {
+    throw new Error("unsupported evidence export packet version");
+  }
+  if (
+    typeof packet.generated_at !== "string" ||
+    !/Z$|[+-]\d{2}:\d{2}$/.test(packet.generated_at)
+  ) {
+    throw new Error(
+      "evidence export packet generated_at must be a timezone-aware ISO timestamp"
+    );
+  }
+  parseTime(packet.generated_at);
+  if (packet.overall_result !== "PASS") {
+    throw new Error("evidence export packet overall_result must be PASS");
+  }
+  if (!Array.isArray(packet.artifacts) || packet.artifacts.length === 0) {
+    throw new Error("evidence export packet artifacts must be a non-empty array");
+  }
+  const names = new Set();
+  const kinds = new Set();
+  for (const artifact of packet.artifacts) {
+    if (typeof artifact !== "object" || artifact === null || Array.isArray(artifact)) {
+      throw new Error("each evidence artifact must be an object");
+    }
+    if (Object.keys(artifact).sort().join(",") !== EVIDENCE_ARTIFACT_KEYS.join(",")) {
+      throw new Error("evidence artifact fields are invalid");
+    }
+    if (!EVIDENCE_EXPORT_KINDS.has(artifact.kind)) {
+      throw new Error("evidence artifact kind is invalid");
+    }
+    if (typeof artifact.name !== "string" || artifact.name.length === 0) {
+      throw new Error("evidence artifact name must be a non-empty string");
+    }
+    if (names.has(artifact.name)) {
+      throw new Error("evidence artifact names must be unique");
+    }
+    names.add(artifact.name);
+    kinds.add(artifact.kind);
+    if (typeof artifact.sha256 !== "string" || !SHA256_RE.test(artifact.sha256)) {
+      throw new Error("evidence artifact sha256 must be a sha256 digest");
+    }
+  }
+  const summary = packet.summary;
+  if (typeof summary !== "object" || summary === null || Array.isArray(summary)) {
+    throw new Error("evidence export packet summary must be an object");
+  }
+  if (Object.keys(summary).sort().join(",") !== "artifacts_total,digest_verified,unique_kinds") {
+    throw new Error("evidence export packet summary fields are invalid");
+  }
+  if (
+    summary.artifacts_total !== packet.artifacts.length ||
+    summary.unique_kinds !== kinds.size ||
+    summary.digest_verified !== true
+  ) {
+    throw new Error("evidence export packet summary is inconsistent");
+  }
+  return {
+    valid: true,
+    artifacts: packet.artifacts.length,
+    unique_kinds: kinds.size,
+  };
+}
+
 if (typeof globalThis !== "undefined") {
   globalThis.KineGrantVerifier = {
     canonicalJson,
@@ -3968,8 +4343,10 @@ if (typeof globalThis !== "undefined") {
     verifyDeviceAttestation,
     verifyBridgeDemoReport,
     verifyHardwareTrustPacket,
+    verifyDeviceToPolicyExport,
     verifyRobotDemoReport,
     verifyCameraConsentTrace,
     verifyFullLifecycleReport,
+    verifyEvidenceExportPacket,
   };
 }
