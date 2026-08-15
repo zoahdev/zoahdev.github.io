@@ -1,0 +1,176 @@
+{
+  "independent_verification": {
+    "checks": [
+      {
+        "capability": "PASS",
+        "detail": "cross-verified",
+        "policy_bundle": "PASS",
+        "policy_current_version": "PASS",
+        "receipts": "PASS",
+        "tool": "kinegrant-js"
+      },
+      {
+        "capability": "SKIP",
+        "detail": "toolchain unavailable",
+        "policy_bundle": "SKIP",
+        "policy_current_version": "SKIP",
+        "receipts": "SKIP",
+        "tool": "kinegrant-go"
+      }
+    ],
+    "overall_result": "PASS",
+    "schema_version": "0.1"
+  },
+  "limitations": [
+    "Reference-implementation self-assessment; certification of third-party implementations awaits RFC approval.",
+    "Independent verifiers (JavaScript, Go) cross-check generated capabilities and receipt chains; unavailable tools are recorded as skipped."
+  ],
+  "marks": [
+    {
+      "detail": "default_deny",
+      "level": "L1",
+      "name": "default_deny",
+      "passed": true
+    },
+    {
+      "detail": "explicit_deny",
+      "level": "L1",
+      "name": "deny_overrides",
+      "passed": true
+    },
+    {
+      "detail": "consumed once",
+      "level": "L1",
+      "name": "single_use",
+      "passed": true
+    },
+    {
+      "detail": "second use denied",
+      "level": "L1",
+      "name": "replay_rejected",
+      "passed": true
+    },
+    {
+      "detail": "receipt verified",
+      "level": "L1",
+      "name": "receipt_chain",
+      "passed": true
+    },
+    {
+      "detail": "parent verified",
+      "level": "L2",
+      "name": "attenuation",
+      "passed": true
+    },
+    {
+      "detail": "within=explicit_allow, over=default_deny",
+      "level": "L2",
+      "name": "physical_constraints",
+      "passed": true
+    },
+    {
+      "detail": "tier=2",
+      "level": "L2",
+      "name": "approval_tiers",
+      "passed": true
+    },
+    {
+      "detail": "forbidden_combination",
+      "level": "L2",
+      "name": "forbidden_combination",
+      "passed": true
+    },
+    {
+      "detail": "stage=complete, compliant=True",
+      "level": "L2",
+      "name": "obligation_compliance",
+      "passed": true
+    },
+    {
+      "detail": "open+replay denied+sequence denied+revocation denied",
+      "level": "L2",
+      "name": "gatekeeper_boundary",
+      "passed": true
+    },
+    {
+      "detail": "properties=5/5",
+      "level": "L2",
+      "name": "gatekeeper_boundary_modelcheck",
+      "passed": true
+    },
+    {
+      "detail": "delegate bound",
+      "level": "L3",
+      "name": "delegation",
+      "passed": true
+    },
+    {
+      "detail": "outsider denied",
+      "level": "L3",
+      "name": "delegate_allowlist",
+      "passed": true
+    },
+    {
+      "detail": "root revoked child",
+      "level": "L3",
+      "name": "revocation",
+      "passed": true
+    },
+    {
+      "detail": "verified bundle applied to both gates",
+      "level": "L3",
+      "name": "revocation_distribution",
+      "passed": true
+    },
+    {
+      "detail": "signed versions verified, revoked version rolled back",
+      "level": "L3",
+      "name": "policy_bundle_trust",
+      "passed": true
+    },
+    {
+      "detail": "verified bundle applied to fleet, upgrades applied, no downgrades",
+      "level": "L3",
+      "name": "policy_fleet_distribution",
+      "passed": true
+    },
+    {
+      "detail": "backwards rejected",
+      "level": "L4",
+      "name": "trusted_clock",
+      "passed": true
+    },
+    {
+      "detail": "commitment verified",
+      "level": "L4",
+      "name": "sensor_evidence",
+      "passed": true
+    },
+    {
+      "detail": "notarized",
+      "level": "L4",
+      "name": "receipt_checkpoint",
+      "passed": true
+    },
+    {
+      "detail": "attestation verified",
+      "level": "L4",
+      "name": "device_attestation",
+      "passed": true
+    },
+    {
+      "detail": "ML-DSA-65 verified",
+      "level": "L4",
+      "name": "post_quantum_envelopes",
+      "passed": true
+    }
+  ],
+  "overall_result": "PASS",
+  "schema_version": "0.1",
+  "summary": {
+    "failed": 0,
+    "passed": 23,
+    "total": 23
+  },
+  "type": "kinegrant:ConformanceReport"
+}
