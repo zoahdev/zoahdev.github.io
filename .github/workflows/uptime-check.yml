@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  contents: read
   issues: write
 
 jobs:
@@ -17,17 +18,27 @@ jobs:
         run: |
           code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 30 https://kinegrant.com/ 2>/dev/null || echo 000)
           echo "code=$code" >> "$GITHUB_OUTPUT"
-          echo "checked $(date -u +%Y-%m-%dT%H:%M:%SZ) -> $code"
+          echo "checked $(date -u +%Y-%m-%dT%H:%M:%SZ) -> $code" | tee -a "$GITHUB_STEP_SUMMARY"
 
-      - name: Open alert issue when down
+      - name: Alert on outage (summary; issue only when the repo allows it)
         if: steps.check.outputs.code != '200'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          open=$(gh issue list --repo zoahdev/zoahdev.github.io --label uptime --state open --json number --jq 'length' 2>/dev/null || echo 0)
-          if [ "$open" -eq 0 ]; then
-            gh issue create --repo zoahdev/zoahdev.github.io \
-              --title "Uptime alert: kinegrant.com returned ${{ steps.check.outputs.code }}" \
-              --label uptime \
-              --body "Scheduled check at $(date -u) returned HTTP ${{ steps.check.outputs.code }}. Workflow: https://github.com/zoahdev/zoahdev.github.io/actions"
+          echo "## Uptime alert: kinegrant.com returned ${{ steps.check.outputs.code }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Scheduled check at $(date -u) returned HTTP ${{ steps.check.outputs.code }}." >> "$GITHUB_STEP_SUMMARY"
+          # Alert issue is best-effort: repositories with Issues disabled must
+          # not turn a real outage into a misleading workflow failure.
+          if gh api repos/zoahdev/zoahdev.github.io --jq .has_issues 2>/dev/null | grep -q true; then
+            open=$(gh issue list --repo zoahdev/zoahdev.github.io --label uptime --state open --json number --jq 'length' 2>/dev/null || echo 0)
+            if [ "$open" -eq 0 ]; then
+              gh issue create --repo zoahdev/zoahdev.github.io \
+                --title "Uptime alert: kinegrant.com returned ${{ steps.check.outputs.code }}" \
+                --label uptime \
+                --body "Scheduled check at $(date -u) returned HTTP ${{ steps.check.outputs.code }}. Workflow: https://github.com/zoahdev/zoahdev.github.io/actions" \
+                || echo "issue creation failed; alert is recorded in the step summary" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            echo "issues are disabled on this repo; alert recorded in the step summary" >> "$GITHUB_STEP_SUMMARY"
           fi
+          exit 1
