@@ -1,0 +1,2 @@
+74dd0569b6605d75f1e99c474515e71bf4390703639ffd4674cf5e7291154e80  SecurityReviewKit-v2.20.0.zip
+dced7d2376b73bec40204ae865b1e12e3524e9ed62b1b2a027659bcbcbad4855  security-review-kit.json
