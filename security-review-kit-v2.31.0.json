@@ -1,0 +1,115 @@
+{
+  "artifacts": {
+    "deployment_cases": "docs/DEPLOYMENT-CASES.md",
+    "releases": [
+      "https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.7.0",
+      "https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.3"
+    ],
+    "reproducing": "REPRODUCING.md",
+    "specification": "spec/KGP-001.md",
+    "standards_mapping": "spec/STANDARD-MAPPING.md",
+    "threat_model": "spec/THREAT-MODEL.md"
+  },
+  "checklist": [
+    {
+      "evidence": "spec/KGP-001.md, conformance mark default_deny",
+      "id": "default-deny",
+      "name": "Default deny and deny-overrides",
+      "status": "PASS"
+    },
+    {
+      "evidence": "MPT-003/MPT-007/MPT-008, SQLiteReplayStore",
+      "id": "replay-protection",
+      "name": "One-time consumption and crash-persistent replay protection",
+      "status": "PASS"
+    },
+    {
+      "evidence": "MPT-017, spec/REVOCATION.md, RevocationDistributor",
+      "id": "revocation",
+      "name": "Revocation and fleet distribution",
+      "status": "PASS"
+    },
+    {
+      "evidence": "MPT-015/MPT-016, ObligationCompliance",
+      "id": "obligations",
+      "name": "Obligation enforcement",
+      "status": "PASS"
+    },
+    {
+      "evidence": "conformance mark gatekeeper_boundary_modelcheck",
+      "id": "boundary-modelcheck",
+      "name": "Gatekeeper boundary model check",
+      "status": "PASS"
+    },
+    {
+      "evidence": "conformance independent_verification, kinegrant-js, kinegrant-go",
+      "id": "cross-implementation",
+      "name": "Cross-implementation interop",
+      "status": "PASS"
+    },
+    {
+      "evidence": "kinegrant-red-team report",
+      "id": "adversarial",
+      "name": "Executable red-team probes",
+      "status": "PASS"
+    }
+  ],
+  "checks": {
+    "benchmarks": {
+      "detail": "machine-readable throughput emitted",
+      "operations_per_second": {
+        "audit_summary": 442.7,
+        "cached_policy_evaluate": 32971.7,
+        "capability_issue": 9566.1,
+        "gate_authorize": 3916.1,
+        "gatekeeper_execute": 1570.2,
+        "jcs_digest": 106507.6,
+        "obligation_compliance": 1557.4,
+        "policy_evaluate": 25073.3,
+        "receipt_append": 3077.1,
+        "revocation_distribute": 3925.3
+      },
+      "status": "PASS"
+    },
+    "conformance": {
+      "detail": "23/23",
+      "status": "PASS"
+    },
+    "machine_permission_test": {
+      "detail": "22/22",
+      "schema_version": "0.5",
+      "status": "PASS"
+    },
+    "red_team": {
+      "detail": "11/11",
+      "status": "PASS"
+    },
+    "release_packet": {
+      "detail": "no release directory supplied",
+      "status": "SKIP"
+    },
+    "unit_tests": {
+      "detail": "OK (skipped=10)",
+      "status": "PASS"
+    }
+  },
+  "commands": [
+    "python -m unittest discover -s tests",
+    "python -m kinegrant.conformance",
+    "python -m kinegrant.mpt --source-commit <sha> --output evidence.json",
+    "python challenge/verify_evidence.py evidence.json",
+    "kinegrant-red-team",
+    "python benchmarks/bench.py",
+    "python scripts/verify_release.py <packet-directory>"
+  ],
+  "generated_at": "2026-08-15T03:30:53.547966Z",
+  "limitations": [
+    "The kit automates evidence collection; it is not a security audit.",
+    "Independent third-party review is still required for certification."
+  ],
+  "overall_result": "PASS",
+  "reference_implementation": "2.31.0",
+  "schema_version": "0.1",
+  "source_commit": "c3adf6cc75e9b16c69e6171dd5daa6f55567ae08",
+  "type": "kinegrant:SecurityReviewKit"
+}
