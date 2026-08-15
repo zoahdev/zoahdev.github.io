@@ -4,7 +4,7 @@
 
 Name: KineGrant
 Formal draft: KGP-001 Experimental Open Draft 0.1
-Reference implementation: v2.39.0 (stable)
+Reference implementation: v2.40.0 (stable)
 Stable wire format: 1.0 (KGP-RFC-0001 accepted)
 License: Apache-2.0
 Founder: Zoah
