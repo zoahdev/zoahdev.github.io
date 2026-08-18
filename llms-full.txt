@@ -4,8 +4,7 @@
 
 Name: KineGrant
 Formal draft: KGP-001 Experimental Open Draft 0.1
-Reference implementation: v2.64.0 (stable)
-Stable wire format: 1.0 (KGP-RFC-0001 accepted)
+Reference implementation: v2.60.0
 License: Apache-2.0
 Founder: Zoah
 Website: https://zoahdev.github.io
@@ -34,7 +33,7 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 5. Physical Action: proceed only after successful verification and atomic capability consumption.
 6. Signed Receipt: record the executor's signed account of the attempted outcome for later verification.
 
-## Security properties in reference implementation v1.0.0
+## Security properties in reference implementation v2.60.0
 
 - No policy issuer is trusted by default.
 - Untrusted policy can restrict or deny but cannot grant permission.
@@ -46,60 +45,11 @@ Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Ga
 - Unknown fields and unsupported adapter semantics fail closed.
 - Receipt verification requires explicit executor trust.
 - A capability may produce only one terminal receipt.
-- RFC 8785 JCS canonical JSON is the deterministic encoding behind every digest and signature.
-- Policy rules can enforce physical constraints (force, velocity, zones) and fail closed when evidence is missing.
-- Scoped capabilities support same-agent attenuation and opt-in cross-agent delegation with bounded depth.
-- Approval tiers propagate from policy decision through capability to signed receipt.
-- Offline revocation lists and signed revocation bundles can revoke a delegation chain from its root.
-- Forbidden combinations deny requests after a dangerous action set is observed.
-- Experimental post-quantum ML-DSA-65 envelopes parallel Ed25519.
-- A cross-system demo runs a ROS 2-style stack and an MCP-style agent tool-call
-  stack against one shared policy, gate, signed receipt log, and sequence
-  policy (`kinegrant-ros2-demo`).
-- The ODRL kgp-v0.2 profile maps `emitActionReceipt` duties to obligations and
-  `kg:prohibitedCombination` to sequence rules, with fail-closed round trips.
-- Receipts can be extended additively as version 1.0 with obligation execution
-  results and failure reasons; Python, JavaScript, and Go all verify them.
-- After execution, ObligationCompliance verifies that every capability
-  obligation (e.g. emitActionReceipt) has a verifiable fulfillment, and the
-  red-team suite includes a suppressed-receipt probe.
-- All runnable demos (two-stack robot, multi-protocol bridge, cross-system
-  ROS2+MCP) run obligation compliance after allowed actions, and the
-  micro-benchmarks include compliance throughput.
-- The obligation vocabulary includes emitActionReceipt, logAuditEvent, and
-  preserveEvidence; the L1-L4 conformance suite is 21/21 and includes
-  obligation_compliance, gatekeeper_boundary, revocation_distribution, and
-  gatekeeper_boundary_modelcheck marks; the conformance report cross-checks
-  generated capabilities and receipt chains with independent JS/Go
-  verifiers.
-- A Gatekeeper component composes sequence check, gate consumption, actuator
-  execution, signed receipt, obligation compliance, revocation checks, and
-  the action journal in one fail-closed call; all runnable demos and
-  deployment traces use it, and the micro-benchmarks include its throughput.
-- A receipt auditor verifies receipt chains, filters receipts by capability,
-  agent, action, result, and time, emits machine-readable summaries, and
-  checks obligation compliance (`kinegrant-audit` CLI included); the
-  micro-benchmarks include audit-summary throughput, and it can export CSV
-  and self-verifying evidence packets, and verify fleet revocation
-  distribution status.
-- A revocation distributor verifies one signed revocation bundle and applies
-  it idempotently to many gates with per-gate acknowledgements
-  (`kinegrant-revoke-distribute` CLI included); fleet reports can be
-  re-validated against their bundle.
-- A bounded policy-decision cache wraps policy evaluation with LRU decisions,
-  hit/miss statistics, and automatic invalidation on policy change; all
-  runnable demos and deployment traces evaluate through it.
-- A bounded model check verifies the Gatekeeper boundary composition
-  invariants (actuator after the boundary, receipts after gate consumption,
-  journal only on compliant success, no replay double-execution).
-- A security review kit generator runs the conformance, MPT, red-team,
-  benchmark, and unit-test suites and emits an auditor-ready checklist; a
-  checksummed kit packet is published with each stable release.
 
 ## Executable evidence
 
 Machine Permission Test v0.5 has twenty-two required software cases:
-MPT-001 no capability means zero actuator calls; MPT-002 a valid capability authorizes exactly one call; MPT-003 reuse is denied; MPT-004 changed agent, target, action, or purpose is denied; MPT-005 a capability from an untrusted issuer is denied; MPT-006 a capability is denied at exact expiry; MPT-007 exactly one of 64 concurrent consumers wins; MPT-008 persistent replay state survives a gate restart; MPT-009 trusted receipts verify while tampered or untrusted receipts do not; MPT-010 physical constraints fail closed (within limit ALLOW, over limit and missing evidence DENY); MPT-011 scoped attenuation narrows and is parent-verified; MPT-012 cross-agent delegation binds the delegate request; MPT-013 approval tiers propagate from policy decision through capability to signed receipt; MPT-014 forbidden combinations deny matching requests after a dangerous set is observed; MPT-015 receipt 1.0 records obligation satisfaction; MPT-016 obligation compliance detects suppressed commitments; MPT-017 fleet revocation distribution applies a signed bundle to all gates.
+MPT-001 no capability means zero actuator calls; MPT-002 a valid capability authorizes exactly one call; MPT-003 a consumed capability cannot be replayed; MPT-004 changed agent, target, action, or purpose is denied; MPT-005 a capability from an untrusted issuer is denied; MPT-006 a capability is denied at exact expiry; MPT-007 exactly one of 64 concurrent consumers wins; MPT-008 persistent replay state survives a gate restart; MPT-009 trusted receipts verify while tampered or untrusted receipts do not; MPT-010 physical constraints fail closed (within limit ALLOW, over limit and missing evidence DENY); MPT-011 scoped attenuation narrows and is parent-verified; MPT-012 cross-agent delegation binds the delegate request; MPT-013 approval tiers propagate from policy decision through capability to signed receipt; MPT-014 forbidden combinations deny matching requests after a dangerous set is observed; MPT-015 receipt 1.0 records obligation satisfaction; MPT-016 obligation compliance detects suppressed commitments; MPT-017 fleet revocation distribution applies a signed bundle to all gates; MPT-018 a signed policy bundle is accepted and enforced; MPT-019 bundle tampering, wrong authority, and wrong policy are rejected; MPT-020 policy version rollback and missing current version fail closed; MPT-021 fleet policy distribution upgrades without downgrades; MPT-022 policy bundle analysis detects conflicts and passes coverage.
 
 ## Direct questions
 
@@ -119,7 +69,7 @@ Q: Is KineGrant blockchain-based?
 A: No. KGP-001 has no blockchain or token dependency in the real-time action path.
 
 Q: Can a grant be reused?
-A: The v1.0.0 reference gate atomically consumes each capability once and rejects replay, including persistent replay after restart when using SQLiteReplayStore.
+A: The v2.60.0 reference gate atomically consumes each capability once and rejects replay, including persistent replay after restart when using SQLiteReplayStore.
 
 Q: What does a receipt prove?
 A: It proves that a trusted executor signed a specific protocol record whose integrity can be verified. It does not independently prove physical truth.
@@ -142,11 +92,23 @@ IAM and PKI establish identity and credential trust. API keys and network ACLs c
 - Specification source: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md
 - Threat model: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/THREAT-MODEL.md
 - Standards mapping: https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/STANDARD-MAPPING.md
-- Stable release: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.0.0
-- Machine Permission Test evidence packet (v0.5): https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.5
+- Reference implementation release: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.60.0
 - Machine Permission Test: https://zoahdev.github.io/challenge
 - Browser verifier: https://zoahdev.github.io/verify
-- Chinese README: https://github.com/zoahdev/kinegrant-protocol/blob/main/README.zh-CN.md
+
+## Community and governance
+
+KineGrant is governed by the community under a no-token DAO-style model:
+- community ownership and transparent decision records, never financial mechanisms;
+- normative changes go through the KGP-RFC process (14-day public comment, recorded contribution-weighted community vote, steering committee supermajority);
+- roles (contributor, maintainer, editor, working groups, steering committee, release manager) are earned and recorded publicly;
+- contribution credentials are non-transferable records with no economic value;
+- hard non-goals: no tokens, no NFTs, no fundraising, no membership fees, no legal entity, no investment or return promises.
+
+Community hub: https://zoahdev.github.io/community
+中文社区：https://zoahdev.github.io/zh/community
+Governance charter: https://github.com/zoahdev/kinegrant-protocol/blob/main/GOVERNANCE.md
+RFC process: https://github.com/zoahdev/kinegrant-protocol/blob/main/docs/RFC-PROCESS.md
 
 ## Claims that must not be made
 

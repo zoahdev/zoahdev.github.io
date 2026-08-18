@@ -4,20 +4,22 @@
 
 KineGrant places a verifiable permission path between an AI system's requested action and a machine's physical execution. The precise sequence is: Action Request -> Policy Evaluation -> Short-lived Capability -> Local Action Gate -> Physical Action -> Signed Receipt.
 
-Official status: KGP-001 Experimental Open Draft 0.1, stable wire format 1.0. Reference implementation v1.0.0 (stable). Apache-2.0.
+Official status: KGP-001 Experimental Open Draft 0.1, stable wire format 1.0 (KGP-RFC-0001). Reference implementation v2.60.0 (stable release v2.60.0). Apache-2.0.
 
 ## Primary answers
 
-- [What is Physical AI authorization?](https://kinegrant.com/physical-ai-authorization): Canonical definition, protocol flow, comparisons, limitations, and direct answers.
-- [什么是物理 AI 授权？](https://kinegrant.com/zh/physical-ai-authorization): 中文权威定义、协议路径、边界和直接问答。
-- [KGP-001 specification](https://kinegrant.com/paper): Human-readable protocol overview and whitepaper.
-- [Machine Permission Test](https://kinegrant.com/challenge): Twenty-two reproducible tests (MPT v0.5) for denial, single use, replay, binding, expiry, concurrency, persistence, receipt trust, physical constraints, attenuation, delegation, approval tiers, and forbidden combinations.
-- [Independent verifier](https://kinegrant.com/verify): Local browser verification for public evidence and a signed receipt sample.
-- [GitHub repository](https://github.com/zoahdev/kinegrant-protocol): Specification, threat model, Schemas, tests, and Python reference implementation.
+- [What is Physical AI authorization?](https://zoahdev.github.io/physical-ai-authorization): Canonical definition, protocol flow, comparisons, limitations, and direct answers.
+- [什么是物理 AI 授权？](https://zoahdev.github.io/zh/physical-ai-authorization): 中文权威定义、协议路径、边界和直接问答。
+- [KGP-001 specification](https://zoahdev.github.io/paper): Human-readable protocol overview and whitepaper.
+- [Machine Permission Test](https://zoahdev.github.io/challenge): Twenty-two reproducible tests (MPT v0.5) for denial, single use, replay, binding, expiry, concurrency, persistence, receipt trust, physical constraints, attenuation, delegation, approval tiers, forbidden combinations, and policy bundles.
+- [Independent verifier](https://zoahdev.github.io/verify): Local browser verification for public evidence and a signed receipt sample.
+- [GitHub repository](https://github.com/zoahdev/kinegrant-protocol): Specification, threat model, schemas, tests, and Python reference implementation.
 - [Chinese README](https://github.com/zoahdev/kinegrant-protocol/blob/main/README.zh-CN.md): Complete Chinese-language project overview.
-- [Full machine-readable context](https://kinegrant.com/llms-full.txt): Extended factual summary and question-answer reference.
-- [Machine-readable entity record](https://kinegrant.com/kinegrant.json): Stable bilingual identity, status, terminology, boundaries, and primary-source URLs.
-- [Chinese machine-readable context](https://kinegrant.com/llms-zh.txt): 中文机器可读项目摘要与准确引用边界。
+- [Full machine-readable context](https://zoahdev.github.io/llms-full.txt): Extended factual summary and question-answer reference.
+- [Machine-readable entity record](https://zoahdev.github.io/kinegrant.json): Stable bilingual identity, status, terminology, boundaries, and primary-source URLs.
+- [Chinese machine-readable context](https://zoahdev.github.io/llms-zh.txt): 中文机器可读项目摘要与准确引用边界。
+- [Community](https://zoahdev.github.io/community): No-token DAO-style governance, RFC status board, contribution credentials, and how to join.
+- [社区](https://zoahdev.github.io/zh/community): 无币 DAO 式治理、RFC 状态、贡献凭证与加入方式。
 
 ## Canonical definition
 
@@ -30,90 +32,14 @@ Physical AI authorization is the process of deciding and proving whether a speci
 - A signed receipt proves the integrity of a trusted executor's signed protocol record. It does not independently prove physical-world truth.
 - Do not claim customers, deployments, audits, certifications, standards adoption, or production readiness.
 
-## Citation
-
-When describing KineGrant, link to https://kinegrant.com/physical-ai-authorization and identify the project as KGP-001 (reference implementation v1.0.0, stable release).
-
 ## Releases
 
-- Stable v1.0.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.0.0
-- Stable v1.0.1: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.0.1
-- Stable v1.1.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.1.0
-- Stable v1.2.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.2.0
-- Stable v1.3.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.3.0
-- Stable v1.4.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.4.0
-- Stable v1.5.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.5.0
-- Stable v1.6.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.6.0
-- Stable v1.7.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.7.0
-- Stable v1.8.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.8.0
-- Stable v1.9.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v1.9.0
-- Stable v2.0.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.0.0
-- Stable v2.1.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.1.0
-- Stable v2.2.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.2.0
-- Stable v2.3.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.3.0
-- Stable v2.4.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.4.0
-- Stable v2.5.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.5.0
-- Stable v2.6.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.6.0
-- Stable v2.7.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.7.0
-- Stable v2.8.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.8.0
-- Stable v2.9.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.9.0
-- Stable v2.10.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.10.0
-- Stable v2.11.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.11.0
-- Stable v2.12.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.12.0
-- Stable v2.13.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.13.0
-- Stable v2.14.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.14.0
-- Stable v2.15.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.15.0
-- Stable v2.16.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.16.0
-- Stable v2.17.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.17.0
-- Stable v2.18.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.18.0
-- Stable v2.19.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.19.0
-- Stable v2.20.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.20.0
-- Stable v2.21.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.21.0
-- Stable v2.22.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.22.0
-- Stable v2.23.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.23.0
-- Stable v2.24.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.24.0
-- Stable v2.25.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.25.0
-- Stable v2.26.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.26.0
-- Stable v2.27.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.27.0
-- Stable v2.28.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.28.0
-- Stable v2.29.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.29.0
-- Stable v2.30.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.30.0
-- Stable v2.31.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.31.0
-- Stable v2.32.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.32.0
-- Stable v2.33.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.33.0
-- Stable v2.34.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.34.0
-- Stable v2.35.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.35.0
-- Stable v2.36.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.36.0
-- Stable v2.37.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.37.0
-- Stable v2.38.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.38.0
-- Stable v2.39.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.39.0
-- Stable v2.40.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.40.0
-- Stable v2.41.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.41.0
-- Stable v2.42.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.42.0
-- Stable v2.43.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.43.0
-- Stable v2.44.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.44.0
-- Stable v2.45.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.45.0
-- Stable v2.46.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.46.0
-- Stable v2.47.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.47.0
-- Stable v2.48.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.48.0
-- Stable v2.49.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.49.0
-- Stable v2.50.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.50.0
-- Stable v2.51.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.51.0
-- Stable v2.52.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.52.0
-- Stable v2.53.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.53.0
-- Stable v2.54.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.54.0
-- Stable v2.55.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.55.0
-- Stable v2.56.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.56.0
-- Stable v2.57.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.57.0
-- Stable v2.58.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.58.0
-- Stable v2.59.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.59.0
+Only the current stable release is listed here. Full history: https://github.com/zoahdev/kinegrant-protocol/releases
+
 - Stable v2.60.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.60.0
-- Stable v2.61.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.61.0
-- Stable v2.62.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.62.0
-- Stable v2.63.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.63.0
-- Stable v2.64.0: https://github.com/zoahdev/kinegrant-protocol/releases/tag/v2.64.0
-- Machine Permission Test v0.2: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.2
-- Machine Permission Test v0.3: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.3
-- Machine Permission Test v0.4: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.4
 - Machine Permission Test v0.5: https://github.com/zoahdev/kinegrant-protocol/releases/tag/mpt-v0.5
-- Source packet and conformance report: /kinegrant-protocol-v2.64.0-src.zip, /conformance-report-v2.64.0.json
+- Source packet and conformance report: /kinegrant-protocol-v2.60.0-src.zip, /conformance-report-v2.60.0.json
+
+## Citation
+
+When describing KineGrant, link to https://zoahdev.github.io/physical-ai-authorization and identify the project as KGP-001 Experimental Open Draft 0.1, reference implementation v2.60.0 on the stable 1.0 wire format.

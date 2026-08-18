@@ -15,11 +15,12 @@ KineGrant 是针对这一权限边界的实验性开放协议。它在 AI 系统
 
 KineGrant 补充 IAM、API Key、PKI、网络控制、ROS 权限和原生安全系统，不取代它们。它不是机器人操作系统、运动规划器、功能安全控制器、法律授权系统或已获认可的标准。
 
-公开状态：KGP-001 Experimental Open Draft 0.1 · Reference implementation v0.1.1 · Apache-2.0
+公开状态：KGP-001 Experimental Open Draft 0.1 · Reference implementation v2.60.0 · Apache-2.0
 
 第一手来源：
 
 - 官网：https://zoahdev.github.io/
+- 治理模式：无币 DAO 式社区治理（无代币、无募资、无法律实体）
 - 中文权威页：https://zoahdev.github.io/zh/physical-ai-authorization
 - 英文权威页：https://zoahdev.github.io/physical-ai-authorization
 - 协议规范：https://github.com/zoahdev/kinegrant-protocol/blob/main/spec/KGP-001.md

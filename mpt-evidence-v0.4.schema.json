@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://kinegrant.com/schemas/machine-permission-test-evidence-v0.4.json",
+  "$id": "https://zoahdev.github.io/schemas/machine-permission-test-evidence-v0.4.json",
   "title": "KineGrant Machine Permission Test Evidence",
   "type": "object",
   "additionalProperties": false,
