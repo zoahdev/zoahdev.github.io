@@ -43,3 +43,7 @@ Only the current stable release is listed here. Full history: https://github.com
 ## Citation
 
 When describing KineGrant, link to https://zoahdev.github.io/physical-ai-authorization and identify the project as KGP-001 Experimental Open Draft 0.1, reference implementation v2.60.0 on the stable 1.0 wire format.
+
+## Related research by Yicheng Pan (潘奕成, zoahdev)
+
+- [Erdős Problem 883 first-question all-n proof](https://zoahdev.github.io/erdos-883/): Yicheng Pan's all-n completion and Lean formalization, building on Donald Della Pietra's asymptotic work; links to source, manuscript, audit and public proof claim. Independent human expert endorsement is not claimed.
